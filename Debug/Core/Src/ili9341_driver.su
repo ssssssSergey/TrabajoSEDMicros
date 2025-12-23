@@ -1,0 +1,6 @@
+../Core/Src/ili9341_driver.c:12:6:ILI9341_WriteCommand	16	static
+../Core/Src/ili9341_driver.c:20:6:ILI9341_WriteData	16	static
+../Core/Src/ili9341_driver.c:28:6:ILI9341_Init	8	static
+../Core/Src/ili9341_driver.c:51:6:ILI9341_SetAddressWindow	24	static
+../Core/Src/ili9341_driver.c:69:6:ILI9341_DrawPixel	24	static
+../Core/Src/ili9341_driver.c:84:6:ILI9341_SendData	16	static
