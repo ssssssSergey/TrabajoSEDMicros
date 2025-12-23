@@ -1,5 +1,12 @@
-../Core/Src/main.c:67:5:main	3
-../Core/Src/main.c:120:6:SystemClock_Config	3
-../Core/Src/main.c:167:13:MX_SPI1_Init	2
-../Core/Src/main.c:205:13:MX_GPIO_Init	1
-../Core/Src/main.c:338:6:Error_Handler	1
+C:/Users/srggr/STM32CubeIDE/workspace_1.18.0/trabajo_sed_micros/Librerias/lvgl-release-v8.3/src/hal/../draw/../misc/lv_color.h:599:26:lv_color_t lv_color_hex(uint32_t)	1
+C:/Users/srggr/STM32CubeIDE/workspace_1.18.0/trabajo_sed_micros/Librerias/lvgl-release-v8.3/src/hal/../draw/sw/../../core/lv_obj_pos.h:199:20:void lv_obj_center(_lv_obj_t*)	1
+C:/Users/srggr/STM32CubeIDE/workspace_1.18.0/trabajo_sed_micros/Librerias/lvgl-release-v8.3/src/core/lv_disp.h:182:26:lv_obj_t* lv_scr_act()	1
+C:/Users/srggr/STM32CubeIDE/workspace_1.18.0/trabajo_sed_micros/Librerias/lvgl-release-v8.3/src/widgets/lv_slider.h:84:20:void lv_slider_set_value(lv_obj_t*, int32_t, lv_anim_enable_t)	1
+C:/Users/srggr/STM32CubeIDE/workspace_1.18.0/trabajo_sed_micros/Librerias/lvgl-release-v8.3/src/widgets/lv_slider.h:106:20:void lv_slider_set_range(lv_obj_t*, int32_t, int32_t)	1
+../Core/Src/main.cpp:66:17:void my_flush_cb(lv_disp_drv_t*, const lv_area_t*, lv_color_t*)	1
+../Core/Src/main.cpp:82:6:void DiseñarAjustes()	1
+../Core/Src/main.cpp:140:5:int main()	1
+../Core/Src/main.cpp:204:6:void SystemClock_Config()	3
+../Core/Src/main.cpp:251:13:void MX_SPI1_Init()	2
+../Core/Src/main.cpp:289:13:void MX_GPIO_Init()	1
+../Core/Src/main.cpp:422:6:void Error_Handler()	1
