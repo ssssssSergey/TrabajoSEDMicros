@@ -1,6 +1,6 @@
 ../Core/Src/ili9341_driver.c:12:6:ILI9341_WriteCommand	1
 ../Core/Src/ili9341_driver.c:20:6:ILI9341_WriteData	1
 ../Core/Src/ili9341_driver.c:28:6:ILI9341_Init	1
-../Core/Src/ili9341_driver.c:51:6:ILI9341_SetAddressWindow	1
-../Core/Src/ili9341_driver.c:69:6:ILI9341_DrawPixel	3
-../Core/Src/ili9341_driver.c:84:6:ILI9341_SendData	1
+../Core/Src/ili9341_driver.c:53:6:ILI9341_SetAddressWindow	1
+../Core/Src/ili9341_driver.c:71:6:ILI9341_DrawPixel	3
+../Core/Src/ili9341_driver.c:86:6:ILI9341_SendData	1

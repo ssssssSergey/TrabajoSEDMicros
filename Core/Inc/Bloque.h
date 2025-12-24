@@ -5,13 +5,20 @@
  *      Author: srggr
  */
 
-#ifndef INC_BLOQUE_H_
-#define INC_BLOQUE_H_
+#ifndef BLOQUE_H
+#define BLOQUE_H
+
+#include "lvgl.h"
+#include "Vector2D.h"
 
 class Bloque {
 public:
-	Bloque();
-	virtual ~Bloque();
-};
+    Vector2D pos;
+    int salud;
+    lv_obj_t* visual;
 
-#endif /* INC_BLOQUE_H_ */
+    Bloque(float x, float y, lv_obj_t* pantalla);
+    ~Bloque();
+    void recibirDano();
+};
+#endif

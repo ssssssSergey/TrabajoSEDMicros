@@ -5,13 +5,37 @@
  *      Author: srggr
  */
 
-#ifndef INC_MUNDO_H_
-#define INC_MUNDO_H_
+#ifndef MUNDO_H
+#define MUNDO_H
+
+#include "lvgl.h"
+#include "Nave.h"
+#include "ListaDisparos.h"
+#include "ListaMarcianitos.h"
+#include "ListaBloques.h"
 
 class Mundo {
-public:
-	Mundo();
-	virtual ~Mundo();
-};
+private:
+    lv_obj_t* pantallaRef;
+    bool gameOver;
+    bool victoria;
 
-#endif /* INC_MUNDO_H_ */
+    void checkColisiones();
+
+public:
+    Nave* jugador;
+    ListaDisparos disparos;
+    ListaMarcianitos aliens;
+    ListaBloques bloques;
+
+    Mundo();
+    ~Mundo(); // Limpia todo
+
+    void inicializar(lv_obj_t* pantalla);
+    void actualizarJuego(uint32_t joystickVal);
+    void intentarDisparar(); // Llamado desde interrupción (o main tras flag)
+
+    bool esGameOver() { return gameOver; }
+    bool esVictoria() { return victoria; }
+};
+#endif

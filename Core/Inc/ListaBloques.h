@@ -5,13 +5,18 @@
  *      Author: srggr
  */
 
-#ifndef INC_LISTABLOQUES_H_
-#define INC_LISTABLOQUES_H_
+#ifndef LISTABLOQUES_H
+#define LISTABLOQUES_H
+
+#include <vector>
+#include "Bloque.h"
 
 class ListaBloques {
 public:
-	ListaBloques();
-	virtual ~ListaBloques();
-};
+    std::vector<Bloque*> elementos;
 
-#endif /* INC_LISTABLOQUES_H_ */
+    void agregar(float x, float y, lv_obj_t* pantalla);
+    void actualizarEstado(); // Elimina bloques destruidos
+    void limpiar();
+};
+#endif

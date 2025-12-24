@@ -23,6 +23,8 @@
 /* USER CODE BEGIN Includes */
 #include "ili9341_driver.h"
 #include "lvgl.h"
+#include "main.h"
+#include "Mundo.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -42,6 +44,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 SPI_HandleTypeDef hspi1;
+ADC_HandleTypeDef hadc1;
 
 /* USER CODE BEGIN PV */
 
@@ -49,12 +52,31 @@ static lv_disp_draw_buf_t draw_buf;     //gestor del buffer
 static lv_color_t buf1[240 * 320 / 10]; //buffer para la pantalla (10% de la memoria)
 static lv_disp_drv_t disp_drv;          //estructura del driver
 
+
+
+Mundo miJuego;
+
+// Flag volátil para la interrupción
+volatile bool flag_boton_pulsado = false;
+
+/* Callback de Interrupción (GPIO) */
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+    // Verifica que sea tu pin de disparo (ej: BTN_Pin)
+    if (GPIO_Pin == Boton_Pin) {
+        flag_boton_pulsado = true;
+    }
+}
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_SPI1_Init(void);
+static void MX_ADC1_Init(void);
+
+
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -62,75 +84,24 @@ static void MX_SPI1_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-//traduce lo descrito en el software en colores reales en el hardware
+// Esta función es el "Driver de Pantalla" para LVGL
 extern "C" void my_flush_cb(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_color_t * color_p)
 {
-    //inicializa el espacio donde se va a pintar
+    // 1. Decirle a la pantalla DÓNDE vamos a pintar
     ILI9341_SetAddressWindow(area->x1, area->y1, area->x2, area->y2);
 
-    //calcula cuántos bytes son (ancho * alto * 2 bytes por color)
-    int32_t x = area->x2 - area->x1 + 1;
-    int32_t y = area->y2 - area->y1 + 1;
+    // 2. Calcular cuántos píxeles son
+    int32_t width = area->x2 - area->x1 + 1;
+    int32_t height = area->y2 - area->y1 + 1;
 
-    //envía los datos usando el driver
-    ILI9341_SendData((uint8_t*)color_p, x * y * 2);
+    // 3. Enviar los colores
+    // IMPORTANTE: Multiplicamos por 2 porque cada píxel son 2 bytes (RGB565)
+    ILI9341_SendData((uint8_t*)color_p, width * height * 2);
 
-    //le dice a lvgl que ya acabó. esto para borrar el buffer y pintar el siguiente trozo
+    // 4. Avisar a LVGL que hemos terminado para que pueda seguir calculando
     lv_disp_flush_ready(disp_drv);
 }
 
-void DiseñarAjustes(void) {
-     //OBTENER LA PANTALLA BASE
-     lv_obj_t * scr = lv_scr_act();//asigna el puntero src a nuestra pantalla actual
-     lv_obj_set_style_bg_color(scr, lv_color_hex(0x202020), LV_PART_MAIN); //fondo Gris Oscuro
-
-     //TÍTULO (Label)
-     lv_obj_t * titulo = lv_label_create(scr); //crea objeto titulo con padre src
-     lv_label_set_text(titulo, "Configuracion");//le mete texto
-     lv_obj_set_style_text_font(titulo, &lv_font_montserrat_14, 0); //fuente del texto
-     lv_obj_set_style_text_color(titulo, lv_color_hex(0xFFFFFF), 0);//letra en blanco
-     lv_obj_align(titulo, LV_ALIGN_TOP_MID, 0, 15); //arriba, bajado 15px
-
-     //PANEL (Un contenedor para agrupar cosas, opcional pero elegante)
-     lv_obj_t * panel = lv_obj_create(scr); // Padre: Pantalla
-     lv_obj_set_size(panel, 200, 180);      // Tamaño fijo
-     lv_obj_align(panel, LV_ALIGN_CENTER, 0, 20); // Al centro, un poco abajo del título
-     lv_obj_set_style_bg_color(panel, lv_color_hex(0xFFFFFF), 0); // Fondo blanco
-
-     // 4. INTERRUPTOR (Switch) - "WiFi"
-     lv_obj_t * sw_wifi = lv_switch_create(panel); // OJO: Padre es el PANEL, no la pantalla
-     lv_obj_align(sw_wifi, LV_ALIGN_TOP_RIGHT, -10, 10); //coord relativas al panel!!!
-          lv_obj_add_state(sw_wifi, LV_STATE_CHECKED); // Hacer que empiece encendido
-
-     //Etiqueta para el interruptor
-     lv_obj_t * label_wifi = lv_label_create(panel); // Padre: Panel
-     lv_label_set_text(label_wifi, "Activar WiFi");
-     lv_obj_align(label_wifi, LV_ALIGN_TOP_LEFT, 10, 15); // A la izquierda del panel
-
-     // 5. SLIDER (Deslizador) - "Brillo"
-     lv_obj_t * slider = lv_slider_create(panel); //crear slider
-     lv_obj_set_width(slider, 160); // Ancho del slider
-     lv_obj_align(slider, LV_ALIGN_CENTER, 0, 20); // Centro del panel
-     lv_slider_set_range(slider, 0, 100); // Rango 0-100
-     lv_slider_set_value(slider, 70, LV_ANIM_OFF); // Valor inicial 70
-
-     // Etiqueta del Slider
-     lv_obj_t * label_brillo = lv_label_create(panel);
-     lv_label_set_text(label_brillo, "Brillo Pantalla");
-     // Truco: Alinear RELATIVO al slider
-     lv_obj_align_to(label_brillo, slider, LV_ALIGN_OUT_TOP_MID, 0, -5);
-
-     // 6. BOTÓN "GUARDAR"
-     lv_obj_t * btn = lv_btn_create(scr); // Padre: Pantalla (fuera del panel)
-     lv_obj_set_size(btn, 120, 40);
-     lv_obj_align(btn, LV_ALIGN_BOTTOM_MID, 0, -20); // Abajo del todo
-     lv_obj_set_style_bg_color(btn, lv_color_hex(0x00A000), 0); // Verde
-
-     // Texto DENTRO del botón
-     lv_obj_t * label_btn = lv_label_create(btn); // IMPORTANTE: Padre es el botón
-     lv_label_set_text(label_btn, "GUARDAR");
-     lv_obj_center(label_btn); // Centrado en el botón
- }
 /* USER CODE END 0 */
 
 /**
@@ -139,48 +110,68 @@ void DiseñarAjustes(void) {
   */
 int main(void)
 {
-
   /* USER CODE BEGIN 1 */
-
+  // ¡AQUÍ NO! (En este punto el chip está "dormido")
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
-  lv_init();
 
   /* USER CODE BEGIN Init */
-
   /* USER CODE END Init */
 
   /* Configure the system clock */
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_SPI1_Init();
+  MX_GPIO_Init();   // 1. Se configuran los pines (CS, DC, RESET)
+  MX_SPI1_Init();   // 2. Se enciende el SPI
+  MX_ADC1_Init(); // (Si usas ADC, asegúrate de que CubeMX generó esta llamada aquí)
 
   /* USER CODE BEGIN 2 */
+  // --- AQUÍ SÍ: EL HARDWARE YA ESTÁ LISTO ---
+
+  // 1. Arrancar pantalla
   ILI9341_Init();
 
-  // 3. Configurar el Buffer (Le damos la memoria RAM que creamos arriba)
-  lv_disp_draw_buf_init(&draw_buf, buf1, NULL, 240 * 320 / 10);
+  // 2. Test de colores (Ahora sí funcionará porque el SPI está vivo)
+  Test_Hardware_Pintar(0xF800); // Rojo
+  HAL_Delay(500);
+  Test_Hardware_Pintar(0x001F); // Azul
+  HAL_Delay(500);
 
-  // 4. Configurar el Driver (Le presentamos nuestra función "puente")
+  // 3. Iniciar LVGL
+  lv_init();
+
+  // 4. Configurar Buffer y Driver LVGL
+  lv_disp_draw_buf_init(&draw_buf, buf1, NULL, 240 * 320 / 10);
   lv_disp_drv_init(&disp_drv);
   disp_drv.hor_res = 240;
   disp_drv.ver_res = 320;
-  disp_drv.flush_cb = my_flush_cb; // <--- AQUÍ conectamos tu función
+  disp_drv.flush_cb = my_flush_cb;
   disp_drv.draw_buf = &draw_buf;
   lv_disp_drv_register(&disp_drv);
 
-  // 5. AHORA SÍ, dibujamos tu interfaz
-  DiseñarAjustes();
+  // 5. Iniciar Juego
+  lv_obj_t* scr = lv_scr_act();
+  lv_obj_set_style_bg_color(scr, lv_color_hex(0x000000), 0); // Fondo Negro
+
+  miJuego.inicializar(scr);
+
+  // Arrancar ADC Joystick
+  // (Asegúrate de haber descomentado MX_ADC1_Init arriba si CubeMX la generó, o llámala si la tienes)
+  HAL_ADC_Start(&hadc1);
+
+    // --- DEBUG: Etiqueta para ver los valores ---
+  lv_obj_t* label_debug = lv_label_create(lv_scr_act());
+  lv_obj_set_style_text_color(label_debug, lv_color_hex(0xFFFFFF), 0);
+  lv_obj_align(label_debug, LV_ALIGN_TOP_MID, 0, 0);
+  // -------------------------------------------
 
   /* USER CODE END 2 */
 
@@ -191,8 +182,27 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  lv_timer_handler(); // Gestiona animaciones y refresco
-	  HAL_Delay(5);       // Pequeña pausa para no saturar
+      // 1. GESTIÓN DEL DISPARO
+      if (flag_boton_pulsado) {
+          flag_boton_pulsado = false;
+          static uint32_t last_time = 0;
+          if (HAL_GetTick() - last_time > 200) {
+              miJuego.intentarDisparar();
+              last_time = HAL_GetTick();
+          }
+      }
+
+      // 2. LEER JOYSTICK
+      HAL_ADC_PollForConversion(&hadc1, 10);
+      uint32_t joy = HAL_ADC_GetValue(&hadc1);
+      lv_label_set_text_fmt(label_debug, "Joy: %lu | Disparo: %d", joy, flag_boton_pulsado);
+
+      // 3. ACTUALIZAR JUEGO
+      miJuego.actualizarJuego(joy);
+
+      // 4. GUI y FPS
+      lv_timer_handler();
+      HAL_Delay(16);
   }
   /* USER CODE END 3 */
 }
@@ -308,7 +318,9 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(OTG_FS_PowerSwitchOn_GPIO_Port, OTG_FS_PowerSwitchOn_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, RESET_Pin|DC_Pin|CS_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, RESET_Pin|CS_Pin, GPIO_PIN_SET);
+
+  HAL_GPIO_WritePin(GPIOA, DC_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, LD4_Pin|LD3_Pin|LD5_Pin|LD6_Pin
@@ -412,7 +424,36 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+static void MX_ADC1_Init(void)
+{
+  ADC_ChannelConfTypeDef sConfig = {0};
 
+  hadc1.Instance = ADC1;
+  hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
+  hadc1.Init.Resolution = ADC_RESOLUTION_12B;
+  hadc1.Init.ScanConvMode = DISABLE;
+  hadc1.Init.ContinuousConvMode = DISABLE;
+  hadc1.Init.DiscontinuousConvMode = DISABLE;
+  hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+  hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+  hadc1.Init.NbrOfConversion = 1;
+  hadc1.Init.DMAContinuousRequests = DISABLE;
+  hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+  if (HAL_ADC_Init(&hadc1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  // CONFIGURACIÓN DEL CANAL (PA1 por defecto)
+  sConfig.Channel = ADC_CHANNEL_1;
+  sConfig.Rank = 1;
+  sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+}
 /* USER CODE END 4 */
 
 /**

@@ -5,13 +5,22 @@
  *      Author: srggr
  */
 
-#ifndef INC_MARCIANITO_H_
-#define INC_MARCIANITO_H_
+#ifndef MARCIANITO_H
+#define MARCIANITO_H
+
+#include "lvgl.h"
+#include "Vector2D.h"
 
 class Marcianito {
 public:
-	Marcianito();
-	virtual ~Marcianito();
-};
+    Vector2D pos;
+    lv_obj_t* visual;
 
-#endif /* INC_MARCIANITO_H_ */
+    // --- CORREGIDO: Ahora acepta float x, float y ---
+    Marcianito(float x, float y, lv_obj_t* pantalla);
+    // -----------------------------------------------
+
+    ~Marcianito();
+    void mover(Vector2D velocidad);
+};
+#endif

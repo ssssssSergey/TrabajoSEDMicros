@@ -5,13 +5,20 @@
  *      Author: srggr
  */
 
-#ifndef DISPARO_H_
-#define DISPARO_H_
+#ifndef DISPARO_H
+#define DISPARO_H
+
+#include "lvgl.h"
+#include "Vector2D.h"
 
 class Disparo {
 public:
-	Disparo();
-	virtual ~Disparo();
-};
+    Vector2D pos;
+    lv_obj_t* visual;
+    bool debeDestruirse; // Flag para indicar que salió de pantalla o chocó
 
-#endif /* DISPARO_H_ */
+    Disparo(float x, float y, lv_obj_t* pantalla);
+    ~Disparo(); // El destructor borrará el objeto visual
+    void actualizar();
+};
+#endif

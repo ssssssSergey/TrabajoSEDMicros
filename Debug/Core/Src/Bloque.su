@@ -1,0 +1,5 @@
+C:/Users/srggr/STM32CubeIDE/workspace_1.18.0/trabajo_sed_micros/Librerias/lvgl-release-v8.3/src/hal/../draw/../misc/lv_color.h:599:26:lv_color_t lv_color_hex(uint32_t)	24	static
+../Core/Inc/Vector2D.h:10:2:Vector2D::Vector2D(float, float)	24	static
+../Core/Src/Bloque.cpp:10:1:Bloque::Bloque(float, float, lv_obj_t*)	32	static
+../Core/Src/Bloque.cpp:18:1:Bloque::~Bloque()	16	static
+../Core/Src/Bloque.cpp:22:6:void Bloque::recibirDano()	24	static

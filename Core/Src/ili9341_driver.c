@@ -26,6 +26,8 @@ void ILI9341_WriteData(uint8_t data) {
 
 
 void ILI9341_Init(void) {//funcion para inicializar la pantallita
+	HAL_GPIO_WritePin(CS_GPIO_Port, CS_Pin, GPIO_PIN_RESET);
+
     // 1. Hardware Reset
     HAL_GPIO_WritePin(RESET_GPIO_Port, RESET_Pin, GPIO_PIN_RESET);
     HAL_Delay(100);

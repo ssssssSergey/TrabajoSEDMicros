@@ -5,13 +5,21 @@
  *      Author: srggr
  */
 
-#ifndef INC_LISTADISPAROS_H_
-#define INC_LISTADISPAROS_H_
+#ifndef LISTADISPAROS_H
+#define LISTADISPAROS_H
+
+#include <vector>
+#include "Disparo.h"
 
 class ListaDisparos {
 public:
-	ListaDisparos();
-	virtual ~ListaDisparos();
-};
+    std::vector<Disparo*> elementos;
 
-#endif /* INC_LISTADISPAROS_H_ */
+    ListaDisparos();
+    ~ListaDisparos();
+
+    void agregar(float x, float y, lv_obj_t* pantalla);
+    void actualizarTodo();
+    void limpiar();
+};
+#endif

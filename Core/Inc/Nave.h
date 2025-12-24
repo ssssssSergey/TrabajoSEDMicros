@@ -5,13 +5,20 @@
  *      Author: srggr
  */
 
-#ifndef SRC_NAVE_H_
-#define SRC_NAVE_H_
+#ifndef NAVE_H
+#define NAVE_H
+
+#include "lvgl.h"
+#include "Vector2D.h"
+#include <cstdint> // Para uint32_t
 
 class Nave {
 public:
-	Nave();
-	virtual ~Nave();
-};
+    Vector2D pos;
+    lv_obj_t* visual;
 
-#endif /* SRC_NAVE_H_ */
+    Nave(lv_obj_t* pantalla);
+    ~Nave();
+    void mover(uint32_t adc_val); // Recibe valor RAW del joystick
+};
+#endif

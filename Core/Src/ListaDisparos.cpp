@@ -5,14 +5,38 @@
  *      Author: srggr
  */
 
-#include <ListaDisparos.h>
+#include "ListaDisparos.h"
 
+// --- IMPLEMENTACIÓN DEL CONSTRUCTOR ---
 ListaDisparos::ListaDisparos() {
-	// TODO Auto-generated constructor stub
-
+    // El vector se inicia solo, no hace falta nada aquí
 }
 
+// --- IMPLEMENTACIÓN DEL DESTRUCTOR ---
 ListaDisparos::~ListaDisparos() {
-	// TODO Auto-generated destructor stub
+    limpiar();
 }
 
+void ListaDisparos::agregar(float x, float y, lv_obj_t* pantalla) {
+    Disparo* d = new Disparo(x, y, pantalla);
+    elementos.push_back(d);
+}
+
+void ListaDisparos::actualizarTodo() {
+    for (auto it = elementos.begin(); it != elementos.end(); ) {
+        (*it)->actualizar();
+        if ((*it)->debeDestruirse) {
+            delete *it; // Llama al destructor de Disparo (borra visual)
+            it = elementos.erase(it); // Lo saca del vector
+        } else {
+            ++it;
+        }
+    }
+}
+
+void ListaDisparos::limpiar() {
+    for (auto d : elementos) {
+        delete d;
+    }
+    elementos.clear();
+}
