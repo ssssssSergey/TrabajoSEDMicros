@@ -69,10 +69,14 @@ void Error_Handler(void);
 #define PH1_OSC_OUT_GPIO_Port GPIOH
 #define OTG_FS_PowerSwitchOn_Pin GPIO_PIN_0
 #define OTG_FS_PowerSwitchOn_GPIO_Port GPIOC
+#define Boton_Pin GPIO_PIN_2
+#define Boton_GPIO_Port GPIOC
 #define PDM_OUT_Pin GPIO_PIN_3
 #define PDM_OUT_GPIO_Port GPIOC
 #define B1_Pin GPIO_PIN_0
 #define B1_GPIO_Port GPIOA
+#define Joystick_Pin GPIO_PIN_1
+#define Joystick_GPIO_Port GPIOA
 #define RESET_Pin GPIO_PIN_2
 #define RESET_GPIO_Port GPIOA
 #define DC_Pin GPIO_PIN_3
