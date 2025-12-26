@@ -4,12 +4,13 @@ C:/Users/srggr/STM32CubeIDE/workspace_1.18.0/trabajo_sed_micros/Librerias/lvgl-r
 ../Core/Src/main.cpp:63:6:void HAL_GPIO_EXTI_Callback(uint16_t)	16	static
 ../Core/Src/main.cpp:88:17:void my_flush_cb(lv_disp_drv_t*, const lv_area_t*, lv_color_t*)	32	static
 ../Core/Src/main.cpp:111:5:int main()	24	static
-../Core/Src/main.cpp:214:6:void SystemClock_Config()	88	static
-../Core/Src/main.cpp:261:13:void MX_SPI1_Init()	8	static
-../Core/Src/main.cpp:299:13:void MX_GPIO_Init()	56	static
-../Core/Src/main.cpp:430:13:void MX_ADC1_Init()	24	static
-../Core/Src/main.cpp:466:6:void Error_Handler()	4	static,ignoring_inline_asm
-../Core/Src/main.cpp:475:1:void __static_initialization_and_destruction_0()	8	static
-../Core/Src/main.cpp:475:1:void __static_initialization_and_destruction_1()	8	static
-../Core/Src/main.cpp:475:1:cpp)	8	static
-../Core/Src/main.cpp:475:1:cpp)	8	static
+../Core/Src/main.cpp:213:6:void SystemClock_Config()	88	static
+../Core/Src/main.cpp:260:13:void MX_SPI1_Init()	8	static
+../Core/Src/main.cpp:298:13:void MX_GPIO_Init()	56	static
+../Core/Src/main.cpp:436:13:void MX_ADC1_Init()	24	static
+../Core/Src/main.cpp:467:17:void EXTI2_IRQHandler()	8	static
+../Core/Src/main.cpp:480:6:void Error_Handler()	4	static,ignoring_inline_asm
+../Core/Src/main.cpp:489:1:void __static_initialization_and_destruction_0()	8	static
+../Core/Src/main.cpp:489:1:void __static_initialization_and_destruction_1()	8	static
+../Core/Src/main.cpp:489:1:cpp)	8	static
+../Core/Src/main.cpp:489:1:cpp)	8	static

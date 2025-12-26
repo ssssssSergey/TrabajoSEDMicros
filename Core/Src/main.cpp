@@ -183,14 +183,13 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
       // 1. GESTIÓN DEL DISPARO
-      if (flag_boton_pulsado) {
-          flag_boton_pulsado = false;
-          static uint32_t last_time = 0;
-          if (HAL_GetTick() - last_time > 200) {
-              miJuego.intentarDisparar();
-              last_time = HAL_GetTick();
-          }
-      }
+	  if (flag_boton_pulsado) {
+	      flag_boton_pulsado = false;
+
+	      miJuego.intentarDisparar();
+
+	      HAL_Delay(200); // Pausa forzada para evitar disparos ametralladora
+	  }
 
       // 2. LEER JOYSTICK
       HAL_ADC_PollForConversion(&hadc1, 10);
@@ -305,7 +304,7 @@ static void MX_GPIO_Init(void)
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOE_CLK_ENABLE();
-  __HAL_RCC_GPIOC_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();//boton disparo
   __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
@@ -326,15 +325,22 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOD, LD4_Pin|LD3_Pin|LD5_Pin|LD6_Pin
                           |Audio_RST_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : Boton_Pin */
+  /*Configure GPIO pin : Boton_Pin */ /*
   GPIO_InitStruct.Pin = Boton_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(Boton_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(Boton_GPIO_Port, &GPIO_InitStruct);*/
 
-  HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+  /* Configuración Manual para PC2 */
+    GPIO_InitStruct.Pin = GPIO_PIN_2;            // Pin 2
+    GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);      // Puerto C
+
+  HAL_NVIC_SetPriority(EXTI2_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI2_IRQn);
 
   /*Configure GPIO pin : OTG_FS_PowerSwitchOn_Pin */
   GPIO_InitStruct.Pin = OTG_FS_PowerSwitchOn_Pin;
@@ -457,6 +463,14 @@ static void MX_ADC1_Init(void)
     Error_Handler();
   }
 }
+
+extern "C" void EXTI2_IRQHandler(void)
+{
+    // Esta función llama al gestor de interrupciones de HAL
+    // Le pasamos el PIN 2 que es donde está tu botón (GPIO_PIN_2)
+    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_2);
+}
+
 /* USER CODE END 4 */
 
 /**
