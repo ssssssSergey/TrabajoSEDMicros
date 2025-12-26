@@ -1,5 +1,5 @@
 C:/Users/srggr/STM32CubeIDE/workspace_1.18.0/trabajo_sed_micros/Librerias/lvgl-release-v8.3/src/hal/../draw/../misc/lv_color.h:599:26:lv_color_t lv_color_hex(uint32_t)	1
 ../Core/Inc/Vector2D.h:10:2:Vector2D::Vector2D(float, float)	1
-../Core/Src/Nave.cpp:10:1:Nave::Nave(lv_obj_t*)	1
-../Core/Src/Nave.cpp:17:1:Nave::~Nave()	2
-../Core/Src/Nave.cpp:21:6:void Nave::mover(uint32_t)	5
+../Core/Src/Nave.cpp:11:1:Nave::Nave(lv_obj_t*)	1
+../Core/Src/Nave.cpp:18:1:Nave::~Nave()	2
+../Core/Src/Nave.cpp:22:6:void Nave::mover(uint32_t)	5

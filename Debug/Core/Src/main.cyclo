@@ -1,16 +1,17 @@
-../Core/Inc/ili9341_driver.h:33:6:void Test_Hardware_Pintar(uint16_t)	3
 C:/Users/srggr/STM32CubeIDE/workspace_1.18.0/trabajo_sed_micros/Librerias/lvgl-release-v8.3/src/hal/../draw/../misc/lv_color.h:599:26:lv_color_t lv_color_hex(uint32_t)	1
 C:/Users/srggr/STM32CubeIDE/workspace_1.18.0/trabajo_sed_micros/Librerias/lvgl-release-v8.3/src/core/lv_disp.h:182:26:lv_obj_t* lv_scr_act()	1
-../Core/Src/main.cpp:63:6:void HAL_GPIO_EXTI_Callback(uint16_t)	2
-../Core/Src/main.cpp:88:17:void my_flush_cb(lv_disp_drv_t*, const lv_area_t*, lv_color_t*)	1
-../Core/Src/main.cpp:111:5:int main()	2
-../Core/Src/main.cpp:213:6:void SystemClock_Config()	3
-../Core/Src/main.cpp:260:13:void MX_SPI1_Init()	2
-../Core/Src/main.cpp:298:13:void MX_GPIO_Init()	1
-../Core/Src/main.cpp:436:13:void MX_ADC1_Init()	3
-../Core/Src/main.cpp:467:17:void EXTI2_IRQHandler()	1
-../Core/Src/main.cpp:480:6:void Error_Handler()	1
-../Core/Src/main.cpp:489:1:void __static_initialization_and_destruction_0()	1
-../Core/Src/main.cpp:489:1:void __static_initialization_and_destruction_1()	1
-../Core/Src/main.cpp:489:1:cpp)	1
-../Core/Src/main.cpp:489:1:cpp)	1
+../Core/Src/main.cpp:61:6:void HAL_GPIO_EXTI_Callback(uint16_t)	2
+../Core/Src/main.cpp:87:6:void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef*)	3
+../Core/Src/main.cpp:96:17:void my_flush_cb(lv_disp_drv_t*, const lv_area_t*, lv_color_t*)	1
+../Core/Src/main.cpp:122:5:int main()	3
+../Core/Src/main.cpp:218:6:void SystemClock_Config()	3
+../Core/Src/main.cpp:265:13:void MX_SPI1_Init()	2
+../Core/Src/main.cpp:303:13:void MX_GPIO_Init()	1
+../Core/Src/main.cpp:440:13:void MX_DMA_Init()	1
+../Core/Src/main.cpp:454:13:void MX_ADC1_Init()	3
+../Core/Src/main.cpp:485:17:void EXTI2_IRQHandler()	1
+../Core/Src/main.cpp:498:6:void Error_Handler()	1
+../Core/Src/main.cpp:507:1:void __static_initialization_and_destruction_0()	1
+../Core/Src/main.cpp:507:1:void __static_initialization_and_destruction_1()	1
+../Core/Src/main.cpp:507:1:cpp)	1
+../Core/Src/main.cpp:507:1:cpp)	1

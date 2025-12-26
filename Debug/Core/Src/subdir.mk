@@ -18,6 +18,7 @@ CPP_SRCS += \
 
 C_SRCS += \
 ../Core/Src/ili9341_driver.c \
+../Core/Src/main.c \
 ../Core/Src/stm32f4xx_hal_msp.c \
 ../Core/Src/stm32f4xx_it.c \
 ../Core/Src/syscalls.c \
@@ -26,6 +27,7 @@ C_SRCS += \
 
 C_DEPS += \
 ./Core/Src/ili9341_driver.d \
+./Core/Src/main.d \
 ./Core/Src/stm32f4xx_hal_msp.d \
 ./Core/Src/stm32f4xx_it.d \
 ./Core/Src/syscalls.d \

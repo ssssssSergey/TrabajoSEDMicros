@@ -19,23 +19,21 @@ void ListaMarcianitos::agregar(float x, float y, lv_obj_t* pantalla) {
 void ListaMarcianitos::moverGrupo(int anchoPantalla) {
     bool tocoPared = false;
 
-    // 1. Mover lateralmente
-    Vector2D velLateral(velocidad * direccion, 0); // Creamos el vector
+    Vector2D velLateral(velocidad * direccion, 0);
 
     for (auto m : elementos) {
-        m->mover(velLateral); // Pasamos el vector, no dos floats
+        m->mover(velLateral);
 
         if (m->pos.x > (anchoPantalla - 20) || m->pos.x < 0) {
             tocoPared = true;
         }
     }
 
-    // 2. Si toca pared
     if (tocoPared) {
         direccion *= -1;
-        Vector2D velBajada(0, 10); // Vector hacia abajo
+        Vector2D velBajada(0, 10);
         for (auto m : elementos) {
-            m->mover(velBajada); // Pasamos vector
+            m->mover(velBajada);
         }
     }
 }

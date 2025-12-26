@@ -19,7 +19,7 @@ public:
 
     ListaMarcianitos();
     void agregar(float x, float y, lv_obj_t* pantalla);
-    void moverGrupo(int anchoPantalla); // Lógica de "Space Invaders"
+    void moverGrupo(int anchoPantalla);
     void limpiar();
     bool llegaronAlSuelo(int limiteY);
 };

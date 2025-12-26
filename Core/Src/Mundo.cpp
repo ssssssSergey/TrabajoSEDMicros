@@ -47,7 +47,7 @@ void Mundo::inicializar(lv_obj_t* pantalla) {
 
 void Mundo::intentarDisparar() {
     if(!gameOver && jugador) {//si no estamos en game over y hay jugador
-        // Dispara desde el centro de la nave
+        //dispara desde el centro de la nave
         disparos.agregar(jugador->pos.x + 13, jugador->pos.y - 10, pantallaRef);
     }
 }
@@ -80,7 +80,7 @@ void Mundo::checkColisiones() {
                      (*itD)->pos.x > b->pos.x && (*itD)->pos.x < b->pos.x + 30 &&
                      (*itD)->pos.y > b->pos.y && (*itD)->pos.y < b->pos.y + 20) {
 
-                     b->recibirDano();
+                     b->recibirDaño();
                      impacto = true;
                      break;
                  }
@@ -102,8 +102,8 @@ void Mundo::actualizarJuego(uint32_t joystickVal) {
 
     jugador->mover(joystickVal);
     disparos.actualizarTodo();
-    aliens.moverGrupo(240); // 240 ancho pantalla
-    bloques.actualizarEstado(); // Borra bloques rotos
+    aliens.moverGrupo(240); //240 ancho pantalla
+    bloques.actualizarEstado(); //Borra bloques rotos
 
     checkColisiones();
 

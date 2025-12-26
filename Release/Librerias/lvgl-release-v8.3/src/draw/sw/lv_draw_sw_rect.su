@@ -1,0 +1,6 @@
+../Librerias/lvgl-release-v8.3/src/draw/sw/lv_draw_sw_rect.c:1032:35:shadow_blur_corner	64	static
+../Librerias/lvgl-release-v8.3/src/draw/sw/lv_draw_sw_rect.c:324:13:draw_bg_img	96	static
+../Librerias/lvgl-release-v8.3/src/draw/sw/lv_draw_sw_rect.c:97:13:draw_bg	144	static
+../Librerias/lvgl-release-v8.3/src/draw/sw/lv_draw_sw_rect.c:83:6:lv_draw_sw_bg	16	static
+../Librerias/lvgl-release-v8.3/src/draw/sw/lv_draw_sw_rect.c:1146:6:draw_border_generic	192	static
+../Librerias/lvgl-release-v8.3/src/draw/sw/lv_draw_sw_rect.c:67:6:lv_draw_sw_rect	200	static

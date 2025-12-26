@@ -10,7 +10,7 @@
 
 #include "lvgl.h"
 #include "Vector2D.h"
-#include <cstdint> // Para uint32_t
+#include <cstdint> //Para uint32_t
 
 class Nave {
 public:
@@ -19,6 +19,6 @@ public:
 
     Nave(lv_obj_t* pantalla);
     ~Nave();
-    void mover(uint32_t adc_val); // Recibe valor RAW del joystick
+    void mover(uint32_t adc_val); //recibe valor directamente del joystick
 };
 #endif

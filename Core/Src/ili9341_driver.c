@@ -6,7 +6,7 @@
  */
 
 #include "main.h"
-extern SPI_HandleTypeDef hspi1; // Asegúrate de que hspi1 sea visible
+extern SPI_HandleTypeDef hspi1;
 
 //función para enviar una instruccion (comando) (cmd)
 void ILI9341_WriteCommand(uint8_t cmd) {
@@ -28,26 +28,26 @@ void ILI9341_WriteData(uint8_t data) {
 void ILI9341_Init(void) {//funcion para inicializar la pantallita
 	HAL_GPIO_WritePin(CS_GPIO_Port, CS_Pin, GPIO_PIN_RESET);
 
-    // 1. Hardware Reset
+    //Hardware Reset
     HAL_GPIO_WritePin(RESET_GPIO_Port, RESET_Pin, GPIO_PIN_RESET);
     HAL_Delay(100);
     HAL_GPIO_WritePin(RESET_GPIO_Port, RESET_Pin, GPIO_PIN_SET);
     HAL_Delay(100);
 
-    // 2. Comandos de Configuración (Ejemplo simplificado)
-    ILI9341_WriteCommand(0x01); // Software Reset
+    //Comandos de Configuración
+    ILI9341_WriteCommand(0x01); //Software Reset
     HAL_Delay(1000);
 
-    ILI9341_WriteCommand(0x11); // Sleep Out
+    ILI9341_WriteCommand(0x11); //Sleep Out
     HAL_Delay(120);
 
-    ILI9341_WriteCommand(0x29); // Display ON
+    ILI9341_WriteCommand(0x29); //Display ON
 
-    ILI9341_WriteCommand(0x3A); // Pixel Format
-    ILI9341_WriteData(0x55);    // 16-bit color (RGB565)
+    ILI9341_WriteCommand(0x3A); //Pixel Format
+    ILI9341_WriteData(0x55);    //16-bit color (RGB565)
 
-    ILI9341_WriteCommand(0x36); // Memory Access Control (Rotación)
-    ILI9341_WriteData(0x48);    // Ajustar según orientación deseada
+    ILI9341_WriteCommand(0x36); //Memory Access Control (Rotación)
+    ILI9341_WriteData(0x48);    //Orientación deseada
 }
 
 void ILI9341_SetAddressWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
@@ -94,5 +94,20 @@ void ILI9341_SendData(uint8_t* pData, uint32_t Size) {
     HAL_GPIO_WritePin(CS_GPIO_Port, CS_Pin, GPIO_PIN_SET);   //Deselect
 }
 
+//Función rápida para probar hardware (Pinta toda la pantalla)
+void Test_Hardware_Pintar(uint16_t color) {
+    //Abrir ventana de toda la pantalla (0,0 a 239,319)
+    ILI9341_SetAddressWindow(0, 0, 239, 319);
 
+    //Crear un buffer temporal de una sola línea (240 píxeles) para no gastar RAM
+    uint16_t linea_buffer[240];
+    for(int i = 0; i < 240; i++) {
+        linea_buffer[i] = (color >> 8) | (color << 8);
+    }
+
+    //Enviar esa línea 320 veces para llenar la altura
+    for(int y = 0; y < 320; y++) {
+        ILI9341_SendData((uint8_t*)linea_buffer, 240 * 2);
+    }
+}
 

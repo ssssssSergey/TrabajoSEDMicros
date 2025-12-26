@@ -7,12 +7,7 @@
 
 #include "ListaDisparos.h"
 
-// --- IMPLEMENTACIÓN DEL CONSTRUCTOR ---
-ListaDisparos::ListaDisparos() {
-    // El vector se inicia solo, no hace falta nada aquí
-}
-
-// --- IMPLEMENTACIÓN DEL DESTRUCTOR ---
+ListaDisparos::ListaDisparos() {}
 ListaDisparos::~ListaDisparos() {
     limpiar();
 }
@@ -26,8 +21,8 @@ void ListaDisparos::actualizarTodo() {
     for (auto it = elementos.begin(); it != elementos.end(); ) {
         (*it)->actualizar();
         if ((*it)->debeDestruirse) {
-            delete *it; // Llama al destructor de Disparo (borra visual)
-            it = elementos.erase(it); // Lo saca del vector
+            delete *it; //borra visual
+            it = elementos.erase(it); //lo saca del vector
         } else {
             ++it;
         }

@@ -4,3 +4,4 @@
 ../Core/Src/ili9341_driver.c:53:6:ILI9341_SetAddressWindow	24	static
 ../Core/Src/ili9341_driver.c:71:6:ILI9341_DrawPixel	24	static
 ../Core/Src/ili9341_driver.c:86:6:ILI9341_SendData	16	static
+../Core/Src/ili9341_driver.c:98:6:Test_Hardware_Pintar	504	static

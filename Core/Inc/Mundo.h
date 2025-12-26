@@ -29,11 +29,11 @@ public:
     ListaBloques bloques;
 
     Mundo();
-    ~Mundo(); // Limpia todo
+    ~Mundo();
 
     void inicializar(lv_obj_t* pantalla);
     void actualizarJuego(uint32_t joystickVal);
-    void intentarDisparar(); // Llamado desde interrupción (o main tras flag)
+    void intentarDisparar();
 
     bool esGameOver() { return gameOver; }
     bool esVictoria() { return victoria; }

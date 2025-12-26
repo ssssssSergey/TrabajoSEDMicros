@@ -16,10 +16,7 @@ public:
     Vector2D pos;
     lv_obj_t* visual;
 
-    // --- CORREGIDO: Ahora acepta float x, float y ---
     Marcianito(float x, float y, lv_obj_t* pantalla);
-    // -----------------------------------------------
-
     ~Marcianito();
     void mover(Vector2D velocidad);
 };

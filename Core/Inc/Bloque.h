@@ -19,6 +19,6 @@ public:
 
     Bloque(float x, float y, lv_obj_t* pantalla);
     ~Bloque();
-    void recibirDano();
+    void recibirDaño();
 };
 #endif

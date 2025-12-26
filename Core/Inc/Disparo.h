@@ -15,10 +15,10 @@ class Disparo {
 public:
     Vector2D pos;
     lv_obj_t* visual;
-    bool debeDestruirse; // Flag para indicar que salió de pantalla o chocó
+    bool debeDestruirse; //Flag para indicar que salió de pantalla o chocó
 
     Disparo(float x, float y, lv_obj_t* pantalla);
-    ~Disparo(); // El destructor borrará el objeto visual
-    void actualizar();
+    ~Disparo();
+    void actualizar();//?
 };
 #endif

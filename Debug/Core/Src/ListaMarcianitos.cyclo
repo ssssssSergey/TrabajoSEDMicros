@@ -5,8 +5,8 @@ C:\ST\STM32CubeIDE_1.18.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.external
 ../Core/Src/ListaMarcianitos.cpp:10:1:ListaMarcianitos::ListaMarcianitos()	1
 ../Core/Src/ListaMarcianitos.cpp:15:6:void ListaMarcianitos::agregar(float, float, lv_obj_t*)	1
 ../Core/Src/ListaMarcianitos.cpp:19:6:void ListaMarcianitos::moverGrupo(int)	6
-../Core/Src/ListaMarcianitos.cpp:43:6:bool ListaMarcianitos::llegaronAlSuelo(int)	3
-../Core/Src/ListaMarcianitos.cpp:50:6:void ListaMarcianitos::limpiar()	3
+../Core/Src/ListaMarcianitos.cpp:41:6:bool ListaMarcianitos::llegaronAlSuelo(int)	3
+../Core/Src/ListaMarcianitos.cpp:48:6:void ListaMarcianitos::limpiar()	3
 C:\ST\STM32CubeIDE_1.18.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344\tools\bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/include/c++/13.3.1/bits/stl_vector.h:137:2:std::_Vector_base<_Tp, _Alloc>::_Vector_impl::_Vector_impl() [with _Tp = Marcianito*; _Alloc = std::allocator<Marcianito*>]	1
 C:\ST\STM32CubeIDE_1.18.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344\tools\bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/include/c++/13.3.1/bits/stl_vector.h:1298:7:void std::vector<_Tp, _Alloc>::push_back(value_type&&) [with _Tp = Marcianito*; _Alloc = std::allocator<Marcianito*>]	1
 C:\ST\STM32CubeIDE_1.18.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344\tools\bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/include/c++/13.3.1/bits/stl_vector.h:873:7:std::vector<_Tp, _Alloc>::iterator std::vector<_Tp, _Alloc>::begin() [with _Tp = Marcianito*; _Alloc = std::allocator<Marcianito*>]	1
