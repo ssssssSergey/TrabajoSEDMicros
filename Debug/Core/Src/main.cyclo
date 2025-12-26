@@ -7,9 +7,9 @@ C:/Users/srggr/STM32CubeIDE/workspace_1.18.0/trabajo_sed_micros/Librerias/lvgl-r
 ../Core/Src/main.cpp:214:6:void SystemClock_Config()	3
 ../Core/Src/main.cpp:261:13:void MX_SPI1_Init()	2
 ../Core/Src/main.cpp:299:13:void MX_GPIO_Init()	1
-../Core/Src/main.cpp:427:13:void MX_ADC1_Init()	3
-../Core/Src/main.cpp:463:6:void Error_Handler()	1
-../Core/Src/main.cpp:472:1:void __static_initialization_and_destruction_0()	1
-../Core/Src/main.cpp:472:1:void __static_initialization_and_destruction_1()	1
-../Core/Src/main.cpp:472:1:cpp)	1
-../Core/Src/main.cpp:472:1:cpp)	1
+../Core/Src/main.cpp:430:13:void MX_ADC1_Init()	3
+../Core/Src/main.cpp:466:6:void Error_Handler()	1
+../Core/Src/main.cpp:475:1:void __static_initialization_and_destruction_0()	1
+../Core/Src/main.cpp:475:1:void __static_initialization_and_destruction_1()	1
+../Core/Src/main.cpp:475:1:cpp)	1
+../Core/Src/main.cpp:475:1:cpp)	1

@@ -75,6 +75,7 @@ void Error_Handler(void);
 #define PDM_OUT_GPIO_Port GPIOC
 #define B1_Pin GPIO_PIN_0
 #define B1_GPIO_Port GPIOA
+#define B1_EXTI_IRQn EXTI0_IRQn
 #define Joystick_Pin GPIO_PIN_1
 #define Joystick_GPIO_Port GPIOA
 #define RESET_Pin GPIO_PIN_2

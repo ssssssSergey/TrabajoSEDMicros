@@ -6,11 +6,11 @@ C:\ST\STM32CubeIDE_1.18.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.external
 ../Core/Inc/ListaBloques.h:14:7:ListaBloques::ListaBloques()	16	static
 ../Core/Inc/ListaBloques.h:14:7:ListaBloques::~ListaBloques()	16	static
 ../Core/Src/Mundo.cpp:10:1:Mundo::Mundo()	16	static
-../Core/Src/Mundo.cpp:15:1:Mundo::~Mundo()	24	static
-../Core/Src/Mundo.cpp:22:6:void Mundo::inicializar(lv_obj_t*)	32	static
-../Core/Src/Mundo.cpp:49:6:void Mundo::intentarDisparar()	16	static
-../Core/Src/Mundo.cpp:56:6:void Mundo::checkColisiones()	72	static
-../Core/Src/Mundo.cpp:108:6:void Mundo::actualizarJuego(uint32_t)	16	static
+../Core/Src/Mundo.cpp:14:1:Mundo::~Mundo()	24	static
+../Core/Src/Mundo.cpp:21:6:void Mundo::inicializar(lv_obj_t*)	32	static
+../Core/Src/Mundo.cpp:48:6:void Mundo::intentarDisparar()	16	static
+../Core/Src/Mundo.cpp:55:6:void Mundo::checkColisiones()	72	static
+../Core/Src/Mundo.cpp:100:6:void Mundo::actualizarJuego(uint32_t)	16	static
 C:\ST\STM32CubeIDE_1.18.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344\tools\bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/include/c++/13.3.1/bits/stl_vector.h:733:7:std::vector<_Tp, _Alloc>::~vector() [with _Tp = Marcianito*; _Alloc = std::allocator<Marcianito*>]	40	static
 C:\ST\STM32CubeIDE_1.18.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344\tools\bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/include/c++/13.3.1/bits/stl_vector.h:137:2:std::_Vector_base<_Tp, _Alloc>::_Vector_impl::_Vector_impl() [with _Tp = Bloque*; _Alloc = std::allocator<Bloque*>]	24	static
 C:\ST\STM32CubeIDE_1.18.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344\tools\bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/include/c++/13.3.1/bits/stl_vector.h:367:7:std::_Vector_base<_Tp, _Alloc>::~_Vector_base() [with _Tp = Bloque*; _Alloc = std::allocator<Bloque*>]	16	static
