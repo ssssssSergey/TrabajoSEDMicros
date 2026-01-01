@@ -226,7 +226,7 @@ Core/Src/Marcianito.o: ../Core/Src/Marcianito.cpp \
  C:/Users/srggr/STM32CubeIDE/workspace_1.18.0/trabajo_sed_micros/Librerias/lvgl-release-v8.3/src/extra/widgets/imgbtn/../../../lvgl.h \
  C:/Users/srggr/STM32CubeIDE/workspace_1.18.0/trabajo_sed_micros/Librerias/lvgl-release-v8.3/src/extra/widgets/span/lv_span.h \
  C:/Users/srggr/STM32CubeIDE/workspace_1.18.0/trabajo_sed_micros/Librerias/lvgl-release-v8.3/src/extra/widgets/span/../../../lvgl.h \
- ../Core/Inc/Vector2D.h
+ ../Core/Inc/Vector2D.h ../Core/Inc/colores.h
 ../Core/Inc/Marcianito.h:
 C:/Users/srggr/STM32CubeIDE/workspace_1.18.0/trabajo_sed_micros/Librerias/lvgl-release-v8.3/lvgl.h:
 C:/Users/srggr/STM32CubeIDE/workspace_1.18.0/trabajo_sed_micros/Librerias/lvgl-release-v8.3/src/misc/lv_log.h:
@@ -455,3 +455,4 @@ C:/Users/srggr/STM32CubeIDE/workspace_1.18.0/trabajo_sed_micros/Librerias/lvgl-r
 C:/Users/srggr/STM32CubeIDE/workspace_1.18.0/trabajo_sed_micros/Librerias/lvgl-release-v8.3/src/extra/widgets/span/lv_span.h:
 C:/Users/srggr/STM32CubeIDE/workspace_1.18.0/trabajo_sed_micros/Librerias/lvgl-release-v8.3/src/extra/widgets/span/../../../lvgl.h:
 ../Core/Inc/Vector2D.h:
+../Core/Inc/colores.h:

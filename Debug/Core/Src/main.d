@@ -258,7 +258,7 @@ Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/main.h \
  ../Core/Inc/Mundo.h ../Core/Inc/Nave.h ../Core/Inc/Vector2D.h \
  ../Core/Inc/ListaDisparos.h ../Core/Inc/Disparo.h \
  ../Core/Inc/ListaMarcianitos.h ../Core/Inc/Marcianito.h \
- ../Core/Inc/ListaBloques.h ../Core/Inc/Bloque.h
+ ../Core/Inc/ListaBloques.h ../Core/Inc/Bloque.h ../Core/Inc/colores.h
 ../Core/Inc/main.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
@@ -527,3 +527,4 @@ C:/Users/srggr/STM32CubeIDE/workspace_1.18.0/trabajo_sed_micros/Librerias/lvgl-r
 ../Core/Inc/Marcianito.h:
 ../Core/Inc/ListaBloques.h:
 ../Core/Inc/Bloque.h:
+../Core/Inc/colores.h:

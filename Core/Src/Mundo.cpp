@@ -32,8 +32,8 @@ void Mundo::inicializar(lv_obj_t* pantalla) {
     //Crear Entidades
     jugador = new Nave(pantalla);
 
-    //Crear Marcianitos (Rejilla 5x3)
-    for(int y=0; y<3; y++) {
+    //Crear Marcianitos (Rejilla 5x2)
+    for(int y=0; y<2; y++) {
         for(int x=0; x<5; x++) {
             aliens.agregar(20 + x*40, 20 + y*30, pantalla);
         }

@@ -22,7 +22,11 @@ Disparo::Disparo(float x, float y, lv_obj_t* pantalla) : pos(x, y) {
 
     lv_obj_set_size(visual, 4, 10);//rectangulo amarillo de 4x10 pixeles
     lv_obj_set_style_bg_color(visual, lv_color_hex(AMARILLO), 0);
+
+    lv_obj_set_style_radius(visual, 0, 0);
+    lv_obj_set_style_border_width(visual, 0, 0);
     lv_obj_clear_flag(visual, LV_OBJ_FLAG_SCROLLABLE);
+
     lv_obj_set_pos(visual, (int)pos.x, (int)pos.y);
 }
 
