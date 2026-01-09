@@ -8,8 +8,14 @@
 #include "Nave.h"
 #include "colores.h"
 
+LV_IMG_DECLARE(nave_pixel_art);
+
 Nave::Nave(lv_obj_t* pantalla) : pos(120, 280) {
-    visual = lv_obj_create(pantalla);
+	visual = lv_img_create(pantalla);
+	lv_img_set_src(visual, &nave_pixel_art);
+
+	/*
+	visual = lv_obj_create(pantalla);
     lv_obj_set_size(visual, 30, 20);
 
     lv_obj_set_style_radius(visual, 0, 0);
@@ -17,7 +23,9 @@ Nave::Nave(lv_obj_t* pantalla) : pos(120, 280) {
     lv_obj_clear_flag(visual, LV_OBJ_FLAG_SCROLLABLE);
 
     lv_obj_set_style_bg_color(visual, lv_color_hex(AMARILLO), 0); //Verde
+    */
     lv_obj_set_pos(visual, (int)pos.x, (int)pos.y);
+
 }
 
 Nave::~Nave() {

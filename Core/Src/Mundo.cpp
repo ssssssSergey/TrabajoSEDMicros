@@ -7,6 +7,8 @@
 
 #include "Mundo.h"
 
+//LV_IMG_DECLARE(nave_pixel_art); //pendiente de reubicar
+
 Mundo::Mundo() :
 	jugador(nullptr),
 	pantallaRef(nullptr) { gameOver = false; victoria = false;}

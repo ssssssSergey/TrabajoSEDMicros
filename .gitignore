@@ -1,0 +1,33 @@
+# --- Carpetas de Compilación (BASURA) ---
+Debug/
+Release/
+build/
+bin/
+
+# --- Archivos intermedios y binarios ---
+*.o
+*.obj
+*.elf
+*.bin
+*.hex
+*.map
+*.su
+*.list
+*.d
+
+# --- Archivos temporales del sistema operativo ---
+.DS_Store
+Thumbs.db
+
+# --- Archivos de configuración locales del IDE (Opcional pero recomendado) ---
+# La carpeta .settings suele contener rutas absolutas de tu PC que dan error en otros PCs
+.settings/
+
+# Archivos de lanzamiento (Debug configurations)
+# A veces contienen rutas específicas de tu ordenador
+*.launch
+
+# --- Archivos de backup o temporales ---
+*.bak
+*.tmp
+*~
