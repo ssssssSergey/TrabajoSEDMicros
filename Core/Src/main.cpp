@@ -52,6 +52,7 @@ DMA_HandleTypeDef hdma_spi1_tx;
 
 static lv_disp_draw_buf_t draw_buf;     //gestor del buffer
 static lv_color_t buf1[240 * 320 / 4]; //buffer para la pantalla (cuidado con la gestion de la RAM)
+static lv_color_t buf2[240 * 320 / 4];
 static lv_disp_drv_t disp_drv;          //estructura del driver
 
 Mundo miJuego;
@@ -169,7 +170,8 @@ int main(void)
   lv_init();//iniciar lvgl
 
   //Configurar Buffer y Driver LVGL
-  lv_disp_draw_buf_init(&draw_buf, buf1, NULL, 240 * 320 / 10);
+  //lv_disp_draw_buf_init(&draw_buf, buf1, NULL, 240 * 320 / 10);
+  lv_disp_draw_buf_init(&draw_buf, buf1, buf2, 240 * 320 / 4);
   lv_disp_drv_init(&disp_drv);
   disp_drv.hor_res = 240;
   disp_drv.ver_res = 320;
