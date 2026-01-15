@@ -23,7 +23,7 @@ enum EstadoJuego {
 };
 
 class Mundo {
-private:
+public:
 	EstadoJuego estadoActual;
 	// Contenedor visual del menú (para borrarlo fácil luego)
 	lv_obj_t* contenedorMenu;
@@ -34,7 +34,7 @@ private:
 
     void checkColisiones();
 
-public:
+//public:
     Nave* jugador;
     ListaDisparos disparos;
     ListaMarcianitos aliens;

@@ -14,7 +14,7 @@ Mundo::Mundo() :
 	pantallaRef(nullptr),
 	contenedorMenu(nullptr)
 {
-	estadoActual = MENUINICIO;
+	estadoActual = MENU_INICIO;
 	gameOver = false; victoria = false;
 }
 
@@ -25,36 +25,85 @@ Mundo::~Mundo() {
     bloques.limpiar();
 }
 
+// 1. inicializar ahora solo prepara la pantalla y muestra el menú
 void Mundo::inicializar(lv_obj_t* pantalla) {
     pantallaRef = pantalla;
+    mostrarMenu(); // <--- Lo primero que vemos
+}
 
-    //Limpiar si había juego anterior
+// 2. Función para pintar el menú con LVGL
+void Mundo::mostrarMenu() {
+    estadoActual = MENU_INICIO;
+
+    // Crear un contenedor transparente para agrupar textos
+    contenedorMenu = lv_obj_create(pantallaRef);
+    lv_obj_set_size(contenedorMenu, 240, 320);
+    lv_obj_set_style_bg_opa(contenedorMenu, LV_OPA_TRANSP, 0);
+    lv_obj_set_style_border_width(contenedorMenu, 0, 0);
+    lv_obj_clear_flag(contenedorMenu, LV_OBJ_FLAG_SCROLLABLE);
+
+    // Título Grande
+    lv_obj_t* labelTitulo = lv_label_create(contenedorMenu);
+    lv_label_set_text(labelTitulo, "SPACE\nINVADERS");
+    lv_obj_set_style_text_align(labelTitulo, LV_TEXT_ALIGN_CENTER, 0);
+    //lv_obj_set_style_text_font(labelTitulo, &lv_font_montserrat_20, 0); // Usa fuente grande si tienes
+    lv_obj_align(labelTitulo, LV_ALIGN_CENTER, 0, -40);
+
+    lv_obj_set_style_text_color(labelTitulo, lv_color_hex(0xFFFFFF), 0);
+
+    // Texto de instrucción
+    lv_obj_t* labelStart = lv_label_create(contenedorMenu);
+    lv_label_set_text(labelStart, "Pulsar Boton\npara Jugar");
+    lv_obj_set_style_text_align(labelStart, LV_TEXT_ALIGN_CENTER, 0);
+    // Poner texto VERDE (estilo retro)
+    lv_obj_set_style_text_color(labelStart, lv_color_hex(0x00FF00), 0);
+
+    lv_obj_align(labelStart, LV_ALIGN_CENTER, 0, 40);
+}
+
+// 3. Esta función se llama cuando pulsas el botón en el main
+void Mundo::iniciarPartida() {
+    // Borramos el menú visualmente
+    if (contenedorMenu != nullptr) {
+        lv_obj_del(contenedorMenu);
+        contenedorMenu = nullptr;
+    }
+
+    // Limpieza de seguridad
     if(jugador) delete jugador;
     disparos.limpiar();
+   //disparosEnemigos.limpiar();
     aliens.limpiar();
     bloques.limpiar();
+
     gameOver = false;
     victoria = false;
+    estadoActual = JUGANDO; // <--- CAMBIO DE ESTADO
 
-    //Crear Entidades
-    jugador = new Nave(pantalla);
+    // --- AQUÍ CREAMOS LAS ENTIDADES (Lo que antes hacías en inicializar) ---
 
-    //Crear Marcianitos (Rejilla 5x2)
+    // Crear Nave
+    jugador = new Nave(pantallaRef);
+
+    // Crear Marcianitos (Rejilla 5x2)
     for(int y=0; y<2; y++) {
         for(int x=0; x<5; x++) {
-            aliens.agregar(20 + x*40, 20 + y*30, pantalla);
+            // Ajusta según tu constructor actual de Marcianito
+            // Si usas lista genérica: aliens.agregar(new Marcianito(...));
+            // Si usas lista específica:
+            aliens.agregar(20 + x*40, 20 + y*30, pantallaRef);
         }
     }
 
-    //Crear Bloques
-    bloques.agregar(40, 240, pantalla);
-    bloques.agregar(100, 240, pantalla);
-    bloques.agregar(160, 240, pantalla);
+    // Crear Bloques
+    bloques.agregar(40, 235, pantallaRef);
+    bloques.agregar(100, 235, pantallaRef);
+    bloques.agregar(160, 235, pantallaRef);
 }
 
 void Mundo::intentarDisparar() {
-    if(!gameOver && jugador) {//si no estamos en game over y hay jugador
-        //dispara desde el centro de la nave
+    // Solo disparamos si estamos jugando
+    if(estadoActual == JUGANDO && !gameOver && jugador) {
         disparos.agregar(jugador->pos.x + 11, jugador->pos.y - 10, pantallaRef);
     }
 }
@@ -105,15 +154,29 @@ void Mundo::checkColisiones() {
 }
 
 void Mundo::actualizarJuego(uint32_t joystickVal) {
+    // Si estamos en el menú, NO hacemos nada de física
+    if (estadoActual == MENU_INICIO) return;
+
+    // Si ya ganamos o perdimos, tampoco (o mostrar pantalla Game Over)
     if (gameOver || victoria) return;
 
-    jugador->mover(joystickVal);
+    // --- LÓGICA DEL JUEGO ---
+    if (jugador) jugador->mover(joystickVal);
+
     disparos.actualizarTodo();
-    aliens.moverGrupo(240); //240 ancho pantalla
-    bloques.actualizarEstado(); //Borra bloques rotos
+    //disparosEnemigos.actualizarTodo(); // ¡No olvides mover las balas enemigas!
+
+    // Lógica de disparo de aliens
+    /*for (auto alien : aliens.elementos) {
+         //DisparoEnemigo* d = alien->intentarDisparar(pantallaRef);
+         //if(d) disparosEnemigos.agregar(d);
+    }*/
+
+    aliens.moverGrupo(240);
+    bloques.actualizarEstado();
 
     checkColisiones();
 
     if (aliens.elementos.empty()) victoria = true;
-    if (aliens.llegaronAlSuelo(260)) gameOver = true;
+    if (aliens.llegaronAlSuelo(260)) gameOver = true; // OJO: Chequear también vidasJugador
 }

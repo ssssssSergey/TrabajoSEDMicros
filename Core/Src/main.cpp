@@ -25,7 +25,6 @@
 #include "lvgl.h"
 #include "main.h"
 #include "Mundo.h"
-#include "colores.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -55,7 +54,7 @@ static lv_color_t buf1[240 * 320 / 4]; //buffer para la pantalla (cuidado con la
 static lv_color_t buf2[240 * 320 / 4];
 static lv_disp_drv_t disp_drv;          //estructura del driver
 
-Mundo miJuego;
+Mundo mundo;
 
 //Flag volátil para la interrupción
 volatile bool flag_boton_pulsado = false;
@@ -166,6 +165,8 @@ int main(void)
 
   lv_init();//iniciar lvgl
 
+  //mundo.inicializar(lv_scr_act()); //menu
+
   //Configurar Buffer y Driver LVGL
   //lv_disp_draw_buf_init(&draw_buf, buf1, NULL, 240 * 320 / 10);
   lv_disp_draw_buf_init(&draw_buf, buf1, buf2, 240 * 320 / 4);
@@ -177,10 +178,11 @@ int main(void)
   lv_disp_drv_register(&disp_drv);
 
   //Iniciar Juego
-  lv_obj_t* scr = lv_scr_act();//define puntero scr para referir a esa pantalla
+  lv_obj_t* scr = lv_scr_act();//define putero scr para referir a esa pantalla
   lv_obj_set_style_bg_color(scr, lv_color_hex(0x000000), 0); //Fondo Negro
+  //lv_obj_invalidate(scr); // Forzar repintado negro
 
-  miJuego.inicializar(scr);
+  mundo.inicializar(scr);
 
   // Arrancar ADC Joystick
   HAL_ADC_Start(&hadc1);
@@ -195,40 +197,58 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-	  //GESTIÓN DEL DISPARO
-	  if (flag_boton_pulsado) {
-	      static uint32_t ultimo_disparo = 0;
-	      uint32_t ahora = HAL_GetTick();//mirar que hora es ahora
+	  // 1. GESTIÓN DE TIEMPO Y GUI
+	      lv_timer_handler(); // Mueve la interfaz gráfica
+	      HAL_Delay(5);       // Pequeño delay para estabilidad
 
-	      //para evitar metralletas
-	      if (ahora - ultimo_disparo > 1500) {
-	          miJuego.intentarDisparar();
-	          ultimo_disparo = ahora;
-	      }
-	      flag_boton_pulsado = false;
-	  }
-
-      //LEER JOYSTICK
-	  static uint32_t joy = 2048; //valor estático: guarda el último valor conocido (empieza en centro)
-
-	  HAL_ADC_Start(&hadc1); // Orden de medir
-	  if (HAL_ADC_PollForConversion(&hadc1, 2) == HAL_OK) // Esperamos máx 2ms
-	  {
-	     joy = HAL_ADC_GetValue(&hadc1); // Solo actualizamos si la lectura es válida
-	  }
-
-	  miJuego.actualizarJuego(joy);
-
-	  static uint32_t timer_debug = 0;
-	      if (HAL_GetTick() - timer_debug > 100)
-	      {
-	    	  timer_debug = HAL_GetTick();
+	      // 2. LEER JOYSTICK
+	      static uint32_t joy = 2048;
+	      HAL_ADC_Start(&hadc1);
+	      if (HAL_ADC_PollForConversion(&hadc1, 2) == HAL_OK) {
+	           joy = HAL_ADC_GetValue(&hadc1);
 	      }
 
-      //GUI y FPS
-      lv_timer_handler();
-      HAL_Delay(4);
-  }
+	      // 3. GESTIÓN DEL BOTÓN (Con Anti-rebote / Cooldown)
+	      bool accion_disparo = false; // Variable local para pasar a la lógica
+	      if (flag_boton_pulsado) {
+	          static uint32_t ultimo_disparo = 0;
+	          uint32_t ahora = HAL_GetTick();
+
+	          //para evitar metralletas que romperian el juego
+	          if (ahora - ultimo_disparo > 1500) {
+	              accion_disparo = true; // Validamos el disparo
+	              ultimo_disparo = ahora;
+	          }
+	          flag_boton_pulsado = false; //Limpiamos flag de interrupción
+	      }
+
+	      // 4. MÁQUINA DE ESTADOS DEL JUEGO
+	      // Usamos 'miJuego' en lugar de 'mundo'
+
+	      if (mundo.estadoActual == MENU_INICIO) {
+	          if (accion_disparo) {
+	              mundo.iniciarPartida();
+	              // Pequeña espera para que no dispare inmediatamente al entrar
+	              HAL_Delay(200);
+	          }
+	      }
+	      else if (mundo.estadoActual == JUGANDO) {
+	          // Ejecutar física del juego pasando el joystick
+	          mundo.actualizarJuego(joy);
+
+	          // Si pulsamos botón, disparamos
+	          if (accion_disparo) {
+	               mundo.intentarDisparar();
+	          }
+	      }
+	      else if (mundo.gameOver || mundo.victoria) {
+	          // Reiniciar al pulsar botón
+	          if (accion_disparo) {
+	               mundo.mostrarMenu();
+	               HAL_Delay(500);
+	          }
+	      }
+	  }
   /* USER CODE END 3 */
 }
 
