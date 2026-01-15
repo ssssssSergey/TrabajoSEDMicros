@@ -11,7 +11,12 @@
 
 Mundo::Mundo() :
 	jugador(nullptr),
-	pantallaRef(nullptr) { gameOver = false; victoria = false;}
+	pantallaRef(nullptr),
+	contenedorMenu(nullptr)
+{
+	estadoActual = MENUINICIO;
+	gameOver = false; victoria = false;
+}
 
 Mundo::~Mundo() {
     if(jugador) delete jugador;
@@ -50,7 +55,7 @@ void Mundo::inicializar(lv_obj_t* pantalla) {
 void Mundo::intentarDisparar() {
     if(!gameOver && jugador) {//si no estamos en game over y hay jugador
         //dispara desde el centro de la nave
-        disparos.agregar(jugador->pos.x + 13, jugador->pos.y - 10, pantallaRef);
+        disparos.agregar(jugador->pos.x + 11, jugador->pos.y - 10, pantallaRef);
     }
 }
 
@@ -81,7 +86,7 @@ void Mundo::checkColisiones() {
                  if (b->salud > 0 &&
                      (*itD)->pos.x > b->pos.x && (*itD)->pos.x < b->pos.x + 30 &&
                      (*itD)->pos.y > b->pos.y && (*itD)->pos.y < b->pos.y + 20) {
-
+                	 //los bloques son de 30x20 pixeles
                      b->recibirDaño();
                      impacto = true;
                      break;

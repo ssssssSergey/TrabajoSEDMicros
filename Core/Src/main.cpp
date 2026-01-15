@@ -114,9 +114,6 @@ extern "C" void my_flush_cb(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv
     uint8_t cmd = 0x2C;
     HAL_SPI_Transmit(&hspi1, &cmd, 1, 10);
 
-    // NOTA: NO subimos el CS aquí. Lo mantenemos bajo para encadenar los datos.
-    // Al mantenerlo bajo, ganamos velocidad y evitamos glitches.
-
     // 3. Preparar DMA
     driver_pendiente = disp_drv;
     int32_t size = (area->x2 - area->x1 + 1) * (area->y2 - area->y1 + 1) * 2;
@@ -188,11 +185,6 @@ int main(void)
   // Arrancar ADC Joystick
   HAL_ADC_Start(&hadc1);
 
-  //etiqueta para ver los valores del joystick
-  lv_obj_t* label_debug = lv_label_create(lv_scr_act());
-  lv_obj_set_style_text_color(label_debug, lv_color_hex(0xFFFFFF), 0);
-  lv_obj_align(label_debug, LV_ALIGN_TOP_MID, 0, 0);
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -209,7 +201,7 @@ int main(void)
 	      uint32_t ahora = HAL_GetTick();//mirar que hora es ahora
 
 	      //para evitar metralletas
-	      if (ahora - ultimo_disparo > 2000) {
+	      if (ahora - ultimo_disparo > 1500) {
 	          miJuego.intentarDisparar();
 	          ultimo_disparo = ahora;
 	      }
@@ -217,26 +209,20 @@ int main(void)
 	  }
 
       //LEER JOYSTICK
-	  static uint32_t joy = 2048; // Valor estático: guarda el último valor conocido (empieza en centro)
+	  static uint32_t joy = 2048; //valor estático: guarda el último valor conocido (empieza en centro)
 
 	  HAL_ADC_Start(&hadc1); // Orden de medir
 	  if (HAL_ADC_PollForConversion(&hadc1, 2) == HAL_OK) // Esperamos máx 2ms
 	  {
 	     joy = HAL_ADC_GetValue(&hadc1); // Solo actualizamos si la lectura es válida
 	  }
-	  // Si falla el Poll, 'joy' mantiene el valor de la vuelta anterior (no se queda a 0)
-
-	 // Debug opcional
-	 // lv_label_set_text_fmt(label_debug, "Joy: %lu", joy);
 
 	  miJuego.actualizarJuego(joy);
 
 	  static uint32_t timer_debug = 0;
 	      if (HAL_GetTick() - timer_debug > 100)
 	      {
-	          // %lu es para unsigned long (uint32_t)
-	          lv_label_set_text_fmt(label_debug, "Joy X: %lu", joy);
-	          timer_debug = HAL_GetTick();
+	    	  timer_debug = HAL_GetTick();
 	      }
 
       //GUI y FPS

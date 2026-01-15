@@ -14,8 +14,20 @@
 #include "ListaMarcianitos.h"
 #include "ListaBloques.h"
 
+// Definimos los estados posibles del juego
+enum EstadoJuego {
+    MENU_INICIO,
+    JUGANDO,
+    GAME_OVER,
+    VICTORIA_TOTAL
+};
+
 class Mundo {
 private:
+	EstadoJuego estadoActual;
+	// Contenedor visual del menú (para borrarlo fácil luego)
+	lv_obj_t* contenedorMenu;
+
     lv_obj_t* pantallaRef;
     bool gameOver;
     bool victoria;
@@ -34,6 +46,10 @@ public:
     void inicializar(lv_obj_t* pantalla);
     void actualizarJuego(uint32_t joystickVal);
     void intentarDisparar();
+
+    // NUEVAS FUNCIONES
+        void mostrarMenu();
+        void iniciarPartida(); // Aquí moveremos la creación de aliens/nave
 
     bool esGameOver() { return gameOver; }
     bool esVictoria() { return victoria; }
