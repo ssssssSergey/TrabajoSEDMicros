@@ -47,9 +47,9 @@ public:
     void actualizarJuego(uint32_t joystickVal);
     void intentarDisparar();
 
-    // NUEVAS FUNCIONES
-        void mostrarMenu();
-        void iniciarPartida(); // Aquí moveremos la creación de aliens/nave
+    void mostrarMenu();
+    void iniciarPartida(); // Aquí moveremos la creación de aliens/nave
+    void mostrarFinPartida(bool esVictoria);
 
     bool esGameOver() { return gameOver; }
     bool esVictoria() { return victoria; }

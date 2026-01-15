@@ -33,6 +33,31 @@ void Mundo::inicializar(lv_obj_t* pantalla) {
 
 // 2. Función para pintar el menú con LVGL
 void Mundo::mostrarMenu() {
+
+	// Borramos al jugador si existe
+	    if (jugador) {
+	        delete jugador;
+	        jugador = nullptr;
+	    }
+
+	    // Borramos todas las listas de entidades
+	    // Al llamar a .limpiar(), se ejecutan los destructores y se borran los gráficos
+	    disparos.limpiar();
+	    //disparosEnemigos.limpiar();
+	    aliens.limpiar();
+	    bloques.limpiar();
+
+	    // Borramos el cartel de "Game Over" o "Victoria" anterior
+	    if (contenedorMenu != nullptr) {
+	        lv_obj_del(contenedorMenu);
+	        contenedorMenu = nullptr;
+	    }
+
+	if (contenedorMenu != nullptr) {
+	        lv_obj_del(contenedorMenu);
+	        contenedorMenu = nullptr;
+	    }
+
     estadoActual = MENU_INICIO;
 
     // Crear un contenedor transparente para agrupar textos
@@ -101,6 +126,43 @@ void Mundo::iniciarPartida() {
     bloques.agregar(160, 235, pantallaRef);
 }
 
+void Mundo::mostrarFinPartida(bool esVictoria) {
+    // Actualizamos el estado para que el Main sepa qué hacer
+    estadoActual = esVictoria ? VICTORIA_TOTAL : GAME_OVER;
+
+    // Reusamos el puntero contenedorMenu. Si había algo, lo borramos.
+    if (contenedorMenu != nullptr) {
+        lv_obj_del(contenedorMenu);
+        contenedorMenu = nullptr;
+    }
+
+    // Creamos un fondo SEMI-TRANSPARENTE oscuro sobre el juego
+    contenedorMenu = lv_obj_create(pantallaRef);
+    lv_obj_set_size(contenedorMenu, 240, 320);
+    lv_obj_set_style_bg_color(contenedorMenu, lv_color_hex(0x000000), 0);
+    lv_obj_set_style_bg_opa(contenedorMenu, LV_OPA_90, 0); // 90% opaco para ver un poco el desastre de fondo
+    lv_obj_set_style_border_width(contenedorMenu, 0, 0);
+
+    // Texto Resultado Gigante
+    lv_obj_t* labelRes = lv_label_create(contenedorMenu);
+    if (esVictoria) {
+        lv_label_set_text(labelRes, "¡VICTORIA!");
+        lv_obj_set_style_text_color(labelRes, lv_color_hex(0x00FF00), 0); // Verde
+    } else {
+        lv_label_set_text(labelRes, "GAME OVER");
+        lv_obj_set_style_text_color(labelRes, lv_color_hex(0xFF0000), 0); // Rojo
+    }
+    lv_obj_set_style_text_align(labelRes, LV_TEXT_ALIGN_CENTER, 0);
+    lv_obj_align(labelRes, LV_ALIGN_CENTER, 0, -30);
+
+    // Texto Volver
+    lv_obj_t* labelVolver = lv_label_create(contenedorMenu);
+    lv_label_set_text(labelVolver, "Pulsar Boton\npara Volver");
+    lv_obj_set_style_text_color(labelVolver, lv_color_hex(0xFFFFFF), 0); // Blanco
+    lv_obj_set_style_text_align(labelVolver, LV_TEXT_ALIGN_CENTER, 0);
+    lv_obj_align(labelVolver, LV_ALIGN_CENTER, 0, 30);
+}
+
 void Mundo::intentarDisparar() {
     // Solo disparamos si estamos jugando
     if(estadoActual == JUGANDO && !gameOver && jugador) {
@@ -154,29 +216,30 @@ void Mundo::checkColisiones() {
 }
 
 void Mundo::actualizarJuego(uint32_t joystickVal) {
-    // Si estamos en el menú, NO hacemos nada de física
-    if (estadoActual == MENU_INICIO) return;
+    // Si no estamos jugando, salimos
+    if (estadoActual != JUGANDO) return;
 
-    // Si ya ganamos o perdimos, tampoco (o mostrar pantalla Game Over)
-    if (gameOver || victoria) return;
-
-    // --- LÓGICA DEL JUEGO ---
+    // --- LÓGICA FÍSICA ---
     if (jugador) jugador->mover(joystickVal);
-
     disparos.actualizarTodo();
-    //disparosEnemigos.actualizarTodo(); // ¡No olvides mover las balas enemigas!
-
-    // Lógica de disparo de aliens
-    /*for (auto alien : aliens.elementos) {
-         //DisparoEnemigo* d = alien->intentarDisparar(pantallaRef);
-         //if(d) disparosEnemigos.agregar(d);
-    }*/
-
     aliens.moverGrupo(240);
     bloques.actualizarEstado();
-
     checkColisiones();
 
-    if (aliens.elementos.empty()) victoria = true;
-    if (aliens.llegaronAlSuelo(260)) gameOver = true; // OJO: Chequear también vidasJugador
+    // --- DETECCIÓN DE FIN DE PARTIDA ---
+
+    // Condición de VICTORIA: No quedan aliens
+    if (aliens.elementos.empty()) {
+        victoria = true;
+        mostrarFinPartida(true); // <--- Muestra mensaje
+        return;
+    }
+
+    // Condición de DERROTA: Aliens tocan suelo (y = 260 aprox)
+    // También podrías añadir: if(jugador->vidas <= 0)
+    if (aliens.llegaronAlSuelo(260)) {
+        gameOver = true;
+        mostrarFinPartida(false); // <--- Muestra mensaje
+        return;
+    }
 }

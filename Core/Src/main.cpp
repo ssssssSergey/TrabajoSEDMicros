@@ -241,13 +241,13 @@ int main(void)
 	               mundo.intentarDisparar();
 	          }
 	      }
-	      else if (mundo.gameOver || mundo.victoria) {
-	          // Reiniciar al pulsar botón
-	          if (accion_disparo) {
-	               mundo.mostrarMenu();
-	               HAL_Delay(500);
+	      else if (mundo.estadoActual == GAME_OVER || mundo.estadoActual == VICTORIA_TOTAL) {
+	              // En pantalla de fin, el botón vuelve al menú
+	              if (accion_disparo) {
+	                   mundo.mostrarMenu(); // Volvemos al inicio
+	                   HAL_Delay(500);      // Pausa para no volver a entrar al instante
+	              }
 	          }
-	      }
 	  }
   /* USER CODE END 3 */
 }
