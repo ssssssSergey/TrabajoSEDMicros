@@ -16,13 +16,13 @@ void ListaMarcianitos::agregar(float x, float y, lv_obj_t* pantalla) {
     elementos.push_back(new Marcianito(x, y, pantalla));
 }
 
-void ListaMarcianitos::moverGrupo(int anchoPantalla) {
+void ListaMarcianitos::moverGrupo(int anchoPantalla, ListaDisparos& disparos) {
     bool tocoPared = false;
 
     Vector2D velLateral(velocidad * direccion, 0);
 
     for (auto m : elementos) {
-        m->mover(velLateral);
+        m->mover(velLateral, disparos);
 
         if (m->pos.x > (anchoPantalla - 20) || m->pos.x < 0) {
             tocoPared = true;
@@ -33,7 +33,7 @@ void ListaMarcianitos::moverGrupo(int anchoPantalla) {
         direccion *= -1;
         Vector2D velBajada(0, 10);
         for (auto m : elementos) {
-            m->mover(velBajada);
+            m->mover(velBajada, disparos);
         }
     }
 }

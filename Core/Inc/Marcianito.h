@@ -10,6 +10,7 @@
 
 #include "lvgl.h"
 #include "Vector2D.h"
+#include "ListaDisparos.h"
 
 class Marcianito {
 public:
@@ -18,6 +19,6 @@ public:
 
     Marcianito(float x, float y, lv_obj_t* pantalla);
     ~Marcianito();
-    void mover(Vector2D velocidad);
+    void mover(Vector2D velocidad, ListaDisparos& lista);
 };
 #endif

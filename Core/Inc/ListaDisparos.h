@@ -18,7 +18,7 @@ public:
     ListaDisparos();
     ~ListaDisparos();
 
-    void agregar(float x, float y, lv_obj_t* pantalla);
+    void agregar(float x, float y, lv_obj_t* pantalla, bool amigoenemigo);
     void actualizarTodo();
     void limpiar();
 };

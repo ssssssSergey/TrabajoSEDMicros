@@ -10,16 +10,17 @@
 
 #include <vector>
 #include "Marcianito.h"
+#include "ListaDisparos.h"
 
 class ListaMarcianitos {
 public:
     std::vector<Marcianito*> elementos;
-    int direccion; // 1 derecha, -1 izquierda
+    int direccion; //1 derecha, -1 izquierda
     float velocidad;
 
     ListaMarcianitos();
     void agregar(float x, float y, lv_obj_t* pantalla);
-    void moverGrupo(int anchoPantalla);
+    void moverGrupo(int anchoPantalla, ListaDisparos& disparos);
     void limpiar();
     bool llegaronAlSuelo(int limiteY);
 };

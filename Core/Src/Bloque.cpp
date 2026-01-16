@@ -7,6 +7,7 @@
 
 #include "Bloque.h"
 
+//comienzo del sprite de los bloques
 #ifdef __has_include
     #if __has_include("lvgl.h")
         #ifndef LV_LVGL_H_INCLUDE_SIMPLE
@@ -124,18 +125,6 @@ const LV_ATTRIBUTE_MEM_ALIGN LV_ATTRIBUTE_LARGE_CONST LV_ATTRIBUTE_IMG_BLOQUE_PI
 #endif
 };
 
-/*
-const lv_img_dsc_t bloque_pixel_art = {
-  .header.cf = LV_IMG_CF_TRUE_COLOR_ALPHA,
-  .header.always_zero = 0,
-  .header.reserved = 0,
-  .header.w = 30,
-  .header.h = 20,
-  .data_size = 600 * LV_IMG_PX_SIZE_ALPHA_BYTE,
-  .data = bloque_pixel_art_map,
-};*/
-
-
 const lv_img_dsc_t bloque_pixel_art = {
   { // header
 		  LV_IMG_CF_TRUE_COLOR_ALPHA, // cf
@@ -147,9 +136,10 @@ const lv_img_dsc_t bloque_pixel_art = {
   600 * LV_IMG_PX_SIZE_ALPHA_BYTE, // data_size
   bloque_pixel_art_map // data
 };
+//fin del sprite de los bloques
 
 Bloque::Bloque(float x, float y, lv_obj_t* pantalla) : pos(x, y) {
-    salud = 3;
+    salud = 2;//numero de disparos que aguanta el bloque antes de destruirse
 
     visual = lv_img_create(pantalla);
     lv_img_set_src(visual, &bloque_pixel_art);
@@ -162,6 +152,7 @@ Bloque::~Bloque() {
 
 void Bloque::recibirDaño() {
     salud--;
-   // if (salud == 2) lv_obj_set_style_bg_color(visual, lv_color_hex(NARANJA), 0);
-   // if (salud == 1) lv_obj_set_style_bg_color(visual, lv_color_hex(ROJO), 0);
+   //posible funcionalidad de cambiar la apariencia del bloque segun recibe daño
+   //if (salud == 2) lv_obj_set_style_bg_color(visual, lv_color_hex(NARANJA), 0);
+   //if (salud == 1) lv_obj_set_style_bg_color(visual, lv_color_hex(ROJO), 0);
 }

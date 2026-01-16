@@ -14,7 +14,7 @@
 #include "ListaMarcianitos.h"
 #include "ListaBloques.h"
 
-// Definimos los estados posibles del juego
+//Definimos los estados posibles del juego
 enum EstadoJuego {
     MENU_INICIO,
     JUGANDO,
@@ -25,16 +25,15 @@ enum EstadoJuego {
 class Mundo {
 public:
 	EstadoJuego estadoActual;
-	// Contenedor visual del menú (para borrarlo fácil luego)
-	lv_obj_t* contenedorMenu;
 
+	//Contenedor visual del menú
+	lv_obj_t* contenedorMenu;
     lv_obj_t* pantallaRef;
     bool gameOver;
     bool victoria;
 
     void checkColisiones();
 
-//public:
     Nave* jugador;
     ListaDisparos disparos;
     ListaMarcianitos aliens;
@@ -48,7 +47,7 @@ public:
     void intentarDisparar();
 
     void mostrarMenu();
-    void iniciarPartida(); // Aquí moveremos la creación de aliens/nave
+    void iniciarPartida();
     void mostrarFinPartida(bool esVictoria);
 
     bool esGameOver() { return gameOver; }

@@ -49,10 +49,10 @@ DMA_HandleTypeDef hdma_spi1_tx;
 
 /* USER CODE BEGIN PV */
 
-static lv_disp_draw_buf_t draw_buf;     //gestor del buffer
+static lv_disp_draw_buf_t draw_buf;    //gestor del buffer
 static lv_color_t buf1[240 * 320 / 4]; //buffer para la pantalla (cuidado con la gestion de la RAM)
-static lv_color_t buf2[240 * 320 / 4];
-static lv_disp_drv_t disp_drv;          //estructura del driver
+static lv_color_t buf2[240 * 320 / 4]; //segundo buffer para que vaya mas rapido
+static lv_disp_drv_t disp_drv;         //estructura del driver
 
 Mundo mundo;
 
@@ -103,24 +103,22 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi) {
 //Esta función es el "Driver de Pantalla" para LVGL
 extern "C" void my_flush_cb(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_color_t * color_p)
 {
-    // 1. Configurar ventana
+    //Configurar ventana
     ILI9341_SetAddressWindow(area->x1, area->y1, area->x2, area->y2);
 
-    // 2. Enviar comando 0x2C (Escribir RAM)
+    //Enviar comando 0x2C (Escribir RAM)
     HAL_GPIO_WritePin(DC_GPIO_Port, DC_Pin, GPIO_PIN_RESET); // Modo COMANDO
     HAL_GPIO_WritePin(CS_GPIO_Port, CS_Pin, GPIO_PIN_RESET); // CS BAJO (Seleccionado)
 
     uint8_t cmd = 0x2C;
     HAL_SPI_Transmit(&hspi1, &cmd, 1, 10);
 
-    // 3. Preparar DMA
+    //Preparar DMA
     driver_pendiente = disp_drv;
     int32_t size = (area->x2 - area->x1 + 1) * (area->y2 - area->y1 + 1) * 2;
 
-    // 4. Enviar Datos
+    //Enviar Datos
     HAL_GPIO_WritePin(DC_GPIO_Port, DC_Pin, GPIO_PIN_SET);   // Modo DATOS
-
-    // CS sigue bajo desde el paso 2, así que enviamos directo
     HAL_SPI_Transmit_DMA(&hspi1, (uint8_t*)color_p, size);
 }
 
@@ -165,10 +163,8 @@ int main(void)
 
   lv_init();//iniciar lvgl
 
-  //mundo.inicializar(lv_scr_act()); //menu
-
   //Configurar Buffer y Driver LVGL
-  //lv_disp_draw_buf_init(&draw_buf, buf1, NULL, 240 * 320 / 10);
+  //cuidado con los tamaños de los buffers
   lv_disp_draw_buf_init(&draw_buf, buf1, buf2, 240 * 320 / 4);
   lv_disp_drv_init(&disp_drv);
   disp_drv.hor_res = 240;
@@ -180,11 +176,10 @@ int main(void)
   //Iniciar Juego
   lv_obj_t* scr = lv_scr_act();//define putero scr para referir a esa pantalla
   lv_obj_set_style_bg_color(scr, lv_color_hex(0x000000), 0); //Fondo Negro
-  //lv_obj_invalidate(scr); // Forzar repintado negro
 
   mundo.inicializar(scr);
 
-  // Arrancar ADC Joystick
+  //Arrancar ADC Joystick
   HAL_ADC_Start(&hadc1);
 
   /* USER CODE END 2 */
@@ -197,58 +192,55 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-	  // 1. GESTIÓN DE TIEMPO Y GUI
-	      lv_timer_handler(); // Mueve la interfaz gráfica
-	      HAL_Delay(5);       // Pequeño delay para estabilidad
+      lv_timer_handler(); //Mueve la interfaz gráfica
+      HAL_Delay(5);       //Pequeño delay para estabilidad
 
-	      // 2. LEER JOYSTICK
-	      static uint32_t joy = 2048;
-	      HAL_ADC_Start(&hadc1);
-	      if (HAL_ADC_PollForConversion(&hadc1, 2) == HAL_OK) {
-	           joy = HAL_ADC_GetValue(&hadc1);
-	      }
+      //LEER JOYSTICK
+      static uint32_t joy = 2048;
+      HAL_ADC_Start(&hadc1);
+      if (HAL_ADC_PollForConversion(&hadc1, 2) == HAL_OK) {
+           joy = HAL_ADC_GetValue(&hadc1);
+      }
 
-	      // 3. GESTIÓN DEL BOTÓN (Con Anti-rebote / Cooldown)
-	      bool accion_disparo = false; // Variable local para pasar a la lógica
-	      if (flag_boton_pulsado) {
-	          static uint32_t ultimo_disparo = 0;
-	          uint32_t ahora = HAL_GetTick();
+      //GESTIÓN DEL BOTÓN
+      bool accion_disparo = false; //variable local para pasar a la lógica
+      if (flag_boton_pulsado) {
+          static uint32_t ultimo_disparo = 0;
+          uint32_t ahora = HAL_GetTick();
 
-	          //para evitar metralletas que romperian el juego
-	          if (ahora - ultimo_disparo > 1500) {
-	              accion_disparo = true; // Validamos el disparo
-	              ultimo_disparo = ahora;
-	          }
-	          flag_boton_pulsado = false; //Limpiamos flag de interrupción
-	      }
+      //para evitar metralletas que romperian el juego
+      if (ahora - ultimo_disparo > 1500) {
+    	  accion_disparo = true; //Validamos el disparo
+	      ultimo_disparo = ahora;
+      }
+	      flag_boton_pulsado = false; //Limpiamos flag de interrupción
+      }
 
-	      // 4. MÁQUINA DE ESTADOS DEL JUEGO
-	      // Usamos 'miJuego' en lugar de 'mundo'
+      //MÁQUINA DE ESTADOS DEL JUEGO
+      if (mundo.estadoActual == MENU_INICIO) {
+          if (accion_disparo) {
+              mundo.iniciarPartida();
+              //Pequeña espera para que no dispare inmediatamente al entrar
+              HAL_Delay(200);
+          }
+      }
+      else if (mundo.estadoActual == JUGANDO) {
+          //Ejecutar física del juego pasando el joystick
+          mundo.actualizarJuego(joy);
 
-	      if (mundo.estadoActual == MENU_INICIO) {
-	          if (accion_disparo) {
-	              mundo.iniciarPartida();
-	              // Pequeña espera para que no dispare inmediatamente al entrar
-	              HAL_Delay(200);
-	          }
-	      }
-	      else if (mundo.estadoActual == JUGANDO) {
-	          // Ejecutar física del juego pasando el joystick
-	          mundo.actualizarJuego(joy);
-
-	          // Si pulsamos botón, disparamos
-	          if (accion_disparo) {
-	               mundo.intentarDisparar();
-	          }
-	      }
-	      else if (mundo.estadoActual == GAME_OVER || mundo.estadoActual == VICTORIA_TOTAL) {
-	              // En pantalla de fin, el botón vuelve al menú
-	              if (accion_disparo) {
-	                   mundo.mostrarMenu(); // Volvemos al inicio
-	                   HAL_Delay(500);      // Pausa para no volver a entrar al instante
-	              }
-	          }
-	  }
+          //Si pulsamos botón, disparamos
+          if (accion_disparo) {
+               mundo.intentarDisparar();
+          }
+      }
+      else if (mundo.estadoActual == GAME_OVER || mundo.estadoActual == VICTORIA_TOTAL) {
+              //En pantalla de fin, el botón vuelve al menú
+              if (accion_disparo) {
+                   mundo.mostrarMenu(); //Volvemos al inicio
+                   HAL_Delay(500);      //Pausa para no volver a entrar al instante
+              }
+          }
+  }
   /* USER CODE END 3 */
 }
 

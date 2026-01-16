@@ -9,7 +9,6 @@
 #define ILI9341_DRIVER_H
 
 #include "main.h"
-#include"colores.h"
 
 #ifdef __cplusplus
 extern "C" {

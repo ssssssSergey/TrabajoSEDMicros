@@ -6,7 +6,6 @@
  */
 
 #include "Nave.h"
-#include "colores.h"
 
 #ifdef __has_include
     #if __has_include("lvgl.h")
@@ -125,18 +124,6 @@ const LV_ATTRIBUTE_MEM_ALIGN LV_ATTRIBUTE_LARGE_CONST LV_ATTRIBUTE_IMG_NAVE2 uin
 #endif
 };
 
-/*
-const lv_img_dsc_t nave2 = {
-  .header.cf = LV_IMG_CF_TRUE_COLOR_ALPHA,
-  .header.always_zero = 0,
-  .header.reserved = 0,
-  .header.w = 30,
-  .header.h = 20,
-  .data_size = 600 * LV_IMG_PX_SIZE_ALPHA_BYTE,
-  .data = nave2_map,
-};*/
-
-
 const lv_img_dsc_t nave_pixel_art = {
   { // header
 		  LV_IMG_CF_TRUE_COLOR_ALPHA, // cf
@@ -150,7 +137,7 @@ const lv_img_dsc_t nave_pixel_art = {
   nave2_map
 };
 
-Nave::Nave(lv_obj_t* pantalla) : pos(120, 280) {
+Nave::Nave(lv_obj_t* pantalla) : pos(120, 300) {
 	visual = lv_img_create(pantalla);
 	lv_img_set_src(visual, &nave_pixel_art);
     lv_obj_set_pos(visual, (int)pos.x, (int)pos.y);

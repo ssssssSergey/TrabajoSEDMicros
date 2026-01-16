@@ -16,8 +16,11 @@ public:
     Vector2D pos;
     lv_obj_t* visual;
     bool debeDestruirse; //Flag para indicar que salió de pantalla o chocó
+    //este flag sobra yo creo
 
-    Disparo(float x, float y, lv_obj_t* pantalla);
+    bool esEnemigo = 0;
+
+    Disparo(float x, float y, lv_obj_t* pantalla, bool amigoenemigo);
     ~Disparo();
     void actualizar();//?
 };

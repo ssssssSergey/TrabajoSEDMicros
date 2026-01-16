@@ -12,8 +12,8 @@ ListaDisparos::~ListaDisparos() {
     limpiar();
 }
 
-void ListaDisparos::agregar(float x, float y, lv_obj_t* pantalla) {
-    Disparo* d = new Disparo(x, y, pantalla);
+void ListaDisparos::agregar(float x, float y, lv_obj_t* pantalla, bool amigoenemigo) {
+    Disparo* d = new Disparo(x, y, pantalla, amigoenemigo);
     elementos.push_back(d);
 }
 

@@ -6,8 +6,9 @@
  */
 
 #include "Marcianito.h"
-//#include "colores.h"
 
+
+//sprite del marcianito
 #ifdef __has_include
     #if __has_include("lvgl.h")
         #ifndef LV_LVGL_H_INCLUDE_SIMPLE
@@ -125,21 +126,11 @@ const LV_ATTRIBUTE_MEM_ALIGN LV_ATTRIBUTE_LARGE_CONST LV_ATTRIBUTE_IMG_MARCIANIT
 #endif
 };
 
-/*
-const lv_img_dsc_t marcianito_pixel_art = {
-  .header.cf = LV_IMG_CF_TRUE_COLOR_ALPHA,
-  .header.always_zero = 0,
-  .header.reserved = 0,
-  .header.w = 20,
-  .header.h = 20,
-  .data_size = 400 * LV_IMG_PX_SIZE_ALPHA_BYTE,
-  .data = marcianito_pixel_art_map,
-};*/
 
 
 const lv_img_dsc_t marcianito_pixel_art = {
   { // header
-		  LV_IMG_CF_TRUE_COLOR_ALPHA, // cf
+		  LV_IMG_CF_TRUE_COLOR_ALPHA, //color format
     0, // always_zero
     0, // reserved
     20, // w
@@ -148,9 +139,11 @@ const lv_img_dsc_t marcianito_pixel_art = {
   400 * LV_IMG_PX_SIZE_ALPHA_BYTE, // data_size
   marcianito_pixel_art_map // data
 };
+//fin del sprite del marcianito
 
-Marcianito::Marcianito(float x, float y, lv_obj_t* pantalla) : pos(x, y) {
-
+Marcianito::Marcianito(float x, float y, lv_obj_t* pantalla) :
+	pos(x, y)
+{
 	visual = lv_img_create(pantalla);
 	lv_img_set_src(visual, &marcianito_pixel_art);
     lv_obj_set_pos(visual, (int)pos.x, (int)pos.y);
@@ -160,7 +153,16 @@ Marcianito::~Marcianito() {
     if (visual) lv_obj_del(visual);
 }
 
-void Marcianito::mover(Vector2D velocidad) {
+void Marcianito::mover(Vector2D velocidad, ListaDisparos& lista) {
     pos = pos + velocidad;
     lv_obj_set_pos(visual, (int)pos.x, (int)pos.y);
+
+    //los marcianitos tienen una probabilidad de disparar
+    int probabilidad = 5;
+
+        if ((rand() % 1000) < probabilidad) {
+            lv_obj_t* pantalla = lv_obj_get_parent(visual);
+            lista.agregar(pos.x + 10, pos.y + 15, pantalla, true);
+        }
+
 }
