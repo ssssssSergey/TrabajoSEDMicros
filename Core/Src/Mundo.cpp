@@ -111,9 +111,9 @@ void Mundo::iniciarPartida() {
         }
     }
 
-    bloques.agregar(40, 255, pantallaRef);
-    bloques.agregar(100, 255, pantallaRef);
-    bloques.agregar(160, 255, pantallaRef);
+    bloques.agregar(40, 260, pantallaRef);
+    bloques.agregar(100, 260, pantallaRef);
+    bloques.agregar(160, 260, pantallaRef);
 }
 
 //menu de fin de partida
@@ -209,7 +209,7 @@ void Mundo::checkColisiones() {
             for(auto b : bloques.elementos) {
                  if (b->salud > 0 &&
                      bala->pos.x > b->pos.x && bala->pos.x < b->pos.x + 30 &&
-                     bala->pos.y > b->pos.y && bala->pos.y < b->pos.y + 20) {
+                     bala->pos.y > b->pos.y && bala->pos.y < b->pos.y + 14) {
 
                      b->recibirDaño();
                      impacto = true;
