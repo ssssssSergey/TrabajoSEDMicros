@@ -158,7 +158,7 @@ void Marcianito::mover(Vector2D velocidad, ListaDisparos& lista) {
     lv_obj_set_pos(visual, (int)pos.x, (int)pos.y);
 
     //los marcianitos tienen una probabilidad de disparar
-    int probabilidad = 5;
+    int probabilidad = 7;
 
         if ((rand() % 1000) < probabilidad) {
             lv_obj_t* pantalla = lv_obj_get_parent(visual);

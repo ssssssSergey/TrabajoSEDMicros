@@ -45,7 +45,8 @@
 /* Private variables ---------------------------------------------------------*/
 SPI_HandleTypeDef hspi1;
 ADC_HandleTypeDef hadc1;
-DMA_HandleTypeDef hdma_spi1_tx;
+DMA_HandleTypeDef hdma_spi1_tx; //handler dma para el spi de la pantalla
+DMA_HandleTypeDef hdma_adc1; //handler dma para el joystick
 
 /* USER CODE BEGIN PV */
 
@@ -53,6 +54,7 @@ static lv_disp_draw_buf_t draw_buf;    //gestor del buffer
 static lv_color_t buf1[240 * 320 / 4]; //buffer para la pantalla (cuidado con la gestion de la RAM)
 static lv_color_t buf2[240 * 320 / 4]; //segundo buffer para que vaya mas rapido
 static lv_disp_drv_t disp_drv;         //estructura del driver
+volatile uint32_t joystick_buffer = 0; //buffer para el joystick
 
 Mundo mundo;
 
@@ -179,8 +181,9 @@ int main(void)
 
   mundo.inicializar(scr);
 
-  //Arrancar ADC Joystick
-  HAL_ADC_Start(&hadc1);
+  //Arrancar ADC DM Joystick
+  HAL_ADC_Start_DMA(&hadc1, (uint32_t*)&joystick_buffer, 1);
+  //HAL_ADC_Start(&hadc1);
 
   /* USER CODE END 2 */
 
@@ -196,11 +199,13 @@ int main(void)
       HAL_Delay(5);       //Pequeño delay para estabilidad
 
       //LEER JOYSTICK
+      /*
       static uint32_t joy = 2048;
       HAL_ADC_Start(&hadc1);
       if (HAL_ADC_PollForConversion(&hadc1, 2) == HAL_OK) {
            joy = HAL_ADC_GetValue(&hadc1);
-      }
+      }*/
+      uint32_t joy = joystick_buffer;
 
       //GESTIÓN DEL BOTÓN
       bool accion_disparo = false; //variable local para pasar a la lógica
@@ -491,31 +496,56 @@ static void MX_ADC1_Init(void)
 {
   ADC_ChannelConfTypeDef sConfig = {0};
 
+  /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion) */
   hadc1.Instance = ADC1;
   hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
   hadc1.Init.Resolution = ADC_RESOLUTION_12B;
   hadc1.Init.ScanConvMode = DISABLE;
-  hadc1.Init.ContinuousConvMode = DISABLE;
+
+  // CAMBIO 1: Activar modo continuo y DMA
+  hadc1.Init.ContinuousConvMode = ENABLE;       //mide continuamente
   hadc1.Init.DiscontinuousConvMode = DISABLE;
   hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
   hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
   hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
   hadc1.Init.NbrOfConversion = 1;
-  hadc1.Init.DMAContinuousRequests = DISABLE;
+  hadc1.Init.DMAContinuousRequests = ENABLE;
   hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+
   if (HAL_ADC_Init(&hadc1) != HAL_OK)
   {
     Error_Handler();
   }
 
-  // CONFIGURACIÓN DEL CANAL (PA1 por defecto)
+  /** Configure for the selected ADC regular channel */
   sConfig.Channel = ADC_CHANNEL_1;
   sConfig.Rank = 1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
+  sConfig.SamplingTime = ADC_SAMPLETIME_480CYCLES; // <--- Aumentado un poco para estabilidad
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
     Error_Handler();
   }
+
+  __HAL_RCC_DMA2_CLK_ENABLE();
+
+  hdma_adc1.Instance = DMA2_Stream0;
+  hdma_adc1.Init.Channel = DMA_CHANNEL_0;
+  hdma_adc1.Init.Direction = DMA_PERIPH_TO_MEMORY;
+  hdma_adc1.Init.PeriphInc = DMA_PINC_DISABLE;
+  hdma_adc1.Init.MemInc = DMA_MINC_ENABLE;
+  hdma_adc1.Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD;
+  hdma_adc1.Init.MemDataAlignment = DMA_MDATAALIGN_WORD;
+  hdma_adc1.Init.Mode = DMA_CIRCULAR;              //se repite indefinidamente
+  hdma_adc1.Init.Priority = DMA_PRIORITY_LOW;
+  hdma_adc1.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+
+  if (HAL_DMA_Init(&hdma_adc1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  // Vincular el DMA al ADC
+  __HAL_LINKDMA(&hadc1, DMA_Handle, hdma_adc1);
 }
 
 extern "C" void EXTI2_IRQHandler(void)
