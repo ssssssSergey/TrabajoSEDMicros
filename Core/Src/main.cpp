@@ -183,7 +183,6 @@ int main(void)
 
   //Arrancar ADC DM Joystick
   HAL_ADC_Start_DMA(&hadc1, (uint32_t*)&joystick_buffer, 1);
-  //HAL_ADC_Start(&hadc1);
 
   /* USER CODE END 2 */
 
@@ -199,12 +198,6 @@ int main(void)
       HAL_Delay(5);       //Pequeño delay para estabilidad
 
       //LEER JOYSTICK
-      /*
-      static uint32_t joy = 2048;
-      HAL_ADC_Start(&hadc1);
-      if (HAL_ADC_PollForConversion(&hadc1, 2) == HAL_OK) {
-           joy = HAL_ADC_GetValue(&hadc1);
-      }*/
       uint32_t joy = joystick_buffer;
 
       //GESTIÓN DEL BOTÓN

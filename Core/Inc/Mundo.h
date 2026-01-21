@@ -29,6 +29,8 @@ public:
 	//Contenedor visual del menú
 	lv_obj_t* contenedorMenu;
     lv_obj_t* pantallaRef;
+    lv_obj_t* objFondo;
+
     bool gameOver;
     bool victoria;
 

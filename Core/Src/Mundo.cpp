@@ -9,10 +9,14 @@
 #include "main.h"
 #include <cstdlib>
 
+LV_IMG_DECLARE(menu_inicio);
+LV_IMG_DECLARE(fondo_partida);
+
 Mundo::Mundo() :
 	jugador(nullptr),
 	pantallaRef(nullptr),
-	contenedorMenu(nullptr)
+	contenedorMenu(nullptr),
+    objFondo(nullptr)
 {
 	estadoActual = MENU_INICIO;
 	gameOver = false; victoria = false;
@@ -20,6 +24,7 @@ Mundo::Mundo() :
 
 Mundo::~Mundo() {
     if(jugador) delete jugador;
+    if(objFondo && lv_obj_is_valid(objFondo)) lv_obj_del(objFondo);
     disparos.limpiar();
     aliens.limpiar();
     bloques.limpiar();
@@ -57,28 +62,17 @@ void Mundo::mostrarMenu() {
 	        contenedorMenu = nullptr;
 	    }
 
+	    if (objFondo != nullptr) {
+	    	        lv_obj_del(objFondo);
+	    	        objFondo = nullptr;
+	    }
+
     estadoActual = MENU_INICIO;
 
-    //Crear un contenedor transparente para agrupar textos
-    contenedorMenu = lv_obj_create(pantallaRef);
-    lv_obj_set_size(contenedorMenu, 240, 320);
-    lv_obj_set_style_bg_opa(contenedorMenu, LV_OPA_TRANSP, 0);
-    lv_obj_set_style_border_width(contenedorMenu, 0, 0);
-    lv_obj_clear_flag(contenedorMenu, LV_OBJ_FLAG_SCROLLABLE);
-
-    //Título Grande
-    lv_obj_t* labelTitulo = lv_label_create(contenedorMenu);
-    lv_label_set_text(labelTitulo, "SPACE\nINVADERS");
-    lv_obj_set_style_text_align(labelTitulo, LV_TEXT_ALIGN_CENTER, 0);
-    lv_obj_align(labelTitulo, LV_ALIGN_CENTER, 0, -40);
-    lv_obj_set_style_text_color(labelTitulo, lv_color_hex(0xFFFFFF), 0);
-
-    //Texto de instrucción
-    lv_obj_t* labelStart = lv_label_create(contenedorMenu);
-    lv_label_set_text(labelStart, "Pulsar Boton\npara Jugar");
-    lv_obj_set_style_text_align(labelStart, LV_TEXT_ALIGN_CENTER, 0);
-    lv_obj_set_style_text_color(labelStart, lv_color_hex(0x00FF00), 0);
-    lv_obj_align(labelStart, LV_ALIGN_CENTER, 0, 40);
+    //menu de inicio
+        objFondo = lv_img_create(pantallaRef);
+        lv_img_set_src(objFondo, &menu_inicio);
+        lv_obj_align(objFondo, LV_ALIGN_CENTER, 0, 0);
 }
 
 //funcion que inicia el juego
@@ -89,10 +83,15 @@ void Mundo::iniciarPartida() {
         contenedorMenu = nullptr;
     }
 
+    //Borramos el fondo del menú para poner el del juego
+        if (objFondo != nullptr) {
+            lv_obj_del(objFondo);
+            objFondo = nullptr;
+    }
+
     //Limpieza de seguridad
     if(jugador) delete jugador;
     disparos.limpiar();
-   //disparosEnemigos.limpiar();
     aliens.limpiar();
     bloques.limpiar();
 
@@ -101,6 +100,14 @@ void Mundo::iniciarPartida() {
     estadoActual = JUGANDO; //cambio de estado
 
     srand(HAL_GetTick());//para aleatorizar los disparos de los marcianitos
+
+    //FONDO DEL JUEGO
+        objFondo = lv_img_create(pantallaRef);
+        lv_img_set_src(objFondo, &fondo_partida);
+        lv_obj_align(objFondo, LV_ALIGN_CENTER, 0, 0);
+
+        //Mover al fondo
+        lv_obj_move_background(objFondo);
 
     //creacion de entidades
     jugador = new Nave(pantallaRef);
